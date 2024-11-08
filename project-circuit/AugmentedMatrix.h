@@ -12,8 +12,8 @@ public:
     using Inlializer2D = std::initializer_list<std::initializer_list<T>>;
 
     explicit AugmentedMatrix(std::size_t size)
-        : data(size)
     {
+        data.reserve(size);
         m_rows = static_cast<int>(size);
         m_columns = static_cast<int>(size + 1);
 
