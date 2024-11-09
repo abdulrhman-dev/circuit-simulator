@@ -1,15 +1,17 @@
 #include <iostream>
 #include "AugmentedMatrix.h"
 #include "MatrixSolve.h"
+#include <string_view>
+#include <string>
 #include <set>
+#include <iomanip>
 
 using Number = double;
 
 enum CircuitType {
     resistor,
     currentSource,
-    voltageSource,
-    shortCircuit
+    voltageSource
 };
 
 class CircuitStamp {
@@ -132,6 +134,7 @@ private:
 class Circuit {
 public:
     using AutoElement = std::unique_ptr<CircuitStamp>;
+    using UnkownValuePair = std::vector<std::pair<std::string, Number>>;
     Circuit() = default;
 
     void addElement(std::unique_ptr<CircuitStamp> ce) {
@@ -151,12 +154,15 @@ public:
 
         int currentVoltageSource = 0;
 
-
         for (const auto& element : circuitElements) {
             if (element.get()->getType() == voltageSource) {
                 VoltageSource* v = dynamic_cast<VoltageSource*>(element.get());
-                if (!v)
+
+                if (!v) {
+                    --m_voltageSourcesCount;
                     continue;
+                }
+
                 v->setVoltageRow(voltageStartingRow + currentVoltageSource);
                 ++currentVoltageSource;
             }
@@ -168,6 +174,32 @@ public:
         return Matrix::solve(solvingMatrix);
     }
 
+    UnkownValuePair makeUnkownValuePair(const std::vector<Number>& v) {
+        UnkownValuePair result;
+
+        if (nodes.size() <= 1 || v.size() == 0)
+            return result;
+
+        std::size_t totalCount = nodes.size() + static_cast<std::size_t>(m_voltageSourcesCount) - 1;
+        result.reserve(totalCount);
+
+
+        for (int node : nodes) {
+            if (node == m_ground)
+                continue;
+
+            int workingNode = getRealNode(node, m_ground);
+            result.emplace_back("V_" + std::to_string(node), v[workingNode]);
+        }
+
+        int voltageCount{};
+        for (std::size_t i = nodes.size() - 1; i < totalCount; ++i) {
+            result.emplace_back("IE_" + std::to_string(voltageCount), v[i]);
+            ++voltageCount;
+        }
+
+        return result;
+    }
 
     void setGround(int value) { m_ground = value; }
 private:
@@ -184,17 +216,22 @@ int main()
 {
     Circuit circuit;
 
-    circuit.addElement(std::unique_ptr<CircuitStamp>(new Resistor(1, 0, 2)));
-    circuit.addElement(std::unique_ptr<CircuitStamp>(new Resistor(1, 0, 6)));
-    circuit.addElement(std::unique_ptr<CircuitStamp>(new Resistor(2, 0, 3)));
-    circuit.addElement(std::unique_ptr<CircuitStamp>(new Resistor(2, 3, 4)));
-    circuit.addElement(std::unique_ptr<CircuitStamp>(new VoltageSource(3, 0, 14)));
-    circuit.addElement(std::unique_ptr<CircuitStamp>(new VoltageSource(1, 2, 6)));
+    circuit.addElement(std::make_unique<VoltageSource>(1, 0, 56));
+    circuit.addElement(std::make_unique<Resistor>(1, 2, 2000));
+    circuit.addElement(std::make_unique<Resistor>(2, 3, 6000));
+    circuit.addElement(std::make_unique<Resistor>(2, 4, 6000));
+    circuit.addElement(std::make_unique<Resistor>(4, 3, 2000));
+    circuit.addElement(std::make_unique<Resistor>(3, 0, 4000));
+    circuit.addElement(std::make_unique<Resistor>(4, 0, 4000));
 
-    std::vector<Number> solution{ circuit.solve() };
 
-    for (Number value : solution) {
-        std::cout << value << " ";
+    circuit.setGround(0);
+
+    auto solution{ circuit.makeUnkownValuePair(circuit.solve()) };
+
+   for (const auto& pair : solution) {
+        std::cout << pair.first << "=" << pair.second << ", ";
     }
-}
 
+    
+}
