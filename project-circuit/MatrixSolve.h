@@ -2,6 +2,8 @@
 #define MATRIX_SOLVE_H
 #include "AugmentedMatrix.h"
 #include "vector"
+#include "iostream"
+
 namespace Matrix {
     template <typename T>
     bool isZeroColumn(int startingRow, int column, const AugmentedMatrix<T>& m, int& firstNonZero) {
