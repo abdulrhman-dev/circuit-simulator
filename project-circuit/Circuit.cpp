@@ -34,7 +34,14 @@ std::vector<Number> Circuit::solve() {
     }
 
 
-    return Matrix::solve(solvingMatrix);
+    std::cout << "MATRIX: \n";
+
+    MatrixSolver::print(solvingMatrix);
+
+    std::cout << '\n';
+
+
+    return MatrixSolver::solve(solvingMatrix);
 }
 
 Circuit::UnkownValuePair Circuit::makeUnkownValuePair(const std::vector<Number>& v) {

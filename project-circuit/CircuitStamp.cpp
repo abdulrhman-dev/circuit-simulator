@@ -49,6 +49,7 @@ void VoltageSource::contribute(AugmentedMatrix<Number>& a, int ground) {
     a.get(m_voltageRow, a.columns() - 1) = m_value;
 
     if (m_nodeI != ground && m_nodeJ != ground) {
+
         int workingNodeI = getRealNode(m_nodeI, ground);
         int workingNodeJ = getRealNode(m_nodeJ, ground);
 
@@ -58,14 +59,13 @@ void VoltageSource::contribute(AugmentedMatrix<Number>& a, int ground) {
         a.get(workingNodeI, m_voltageRow) = 1;
         a.get(workingNodeJ, m_voltageRow) = -1;
 
-        a.get(m_voltageRow, a.columns() - 1) = m_value;
-
         return;
     }
 
     int workingNode = getRealNode(m_nodeI != ground ? m_nodeI : m_nodeJ, ground);
+    bool correctConenction = m_nodeJ == ground;
 
-    a.get(m_voltageRow, workingNode) = 1;
-    a.get(workingNode, m_voltageRow) = 1;
+    a.get(m_voltageRow, workingNode) = correctConenction ? 1 : -1;
+    a.get(workingNode, m_voltageRow) = correctConenction ? 1 : -1;
 }
 

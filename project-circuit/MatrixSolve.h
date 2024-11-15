@@ -4,7 +4,7 @@
 #include "vector"
 #include "iostream"
 
-namespace Matrix {
+namespace MatrixSolver {
     template <typename T>
     bool isZeroColumn(int startingRow, int column, const AugmentedMatrix<T>& m, int& firstNonZero) {
         for (int row = startingRow; row < m.rows(); ++row) {
@@ -84,7 +84,7 @@ namespace Matrix {
         for (int i = 0; i < m.rows(); ++i) {
 
             for (int j = 0; j < m.columns(); ++j) {
-                std::cout << m.get(i, j) << " ";
+                std::cout << std::setw(5) << m.get(i, j) << " ";
             }
 
             std::cout << '\n';
