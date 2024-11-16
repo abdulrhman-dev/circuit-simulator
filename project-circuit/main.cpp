@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include <sstream>
 #include "raylib.h"
 #include "raymath.h"
 
@@ -41,9 +42,10 @@ struct NodeObject
     bool solved{ false };
 };
 
-
-void drawElement(Texture2D texture, Rectangle sourceTextureRec, const CircuitElement& circuitElement);
+void drawElementText(Font font, float value, Vector2 ElementVector, Vector2 endPos, float rotation, DrawState drawState);
+void drawElement(Texture2D texture, Font font, Rectangle sourceTextureRec, const CircuitElement& circuitElement);
 void drawWire(const CircuitElement& circuitElement);
+std::string toString(float value);
 std::vector<Number> SolveCircuit(std::list<NodeObject>& nodes, std::list<CircuitElement>& circuitElements);
 
 int main(void)
@@ -112,7 +114,7 @@ int main(void)
                 if (node.solved && solution.size() > getRealNode(node.graphNode.value, ground)) {
                     showStatus = true;
                     float value = node.graphNode.value == ground ? 0.0f : static_cast<float>(solution[getRealNode(node.graphNode.value, ground)]);
-                    statusText = "V = " + std::to_string(value) + "V";
+                    statusText = "V = " + toString(value) + "V";
                 }
 
                 if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -223,6 +225,8 @@ int main(void)
                 break;
             }
 
+            drawElementText(font, 5.0f,ElementVector, GetMousePosition(), rotation, currentDrawState);
+
             DrawTexturePro(currentTexture, sourceTexture, destTextureRec, origin, rotation, WHITE);
 
             if (drawExtentions) {
@@ -239,13 +243,13 @@ int main(void)
             switch (circuitElement.state)
             {
             case RESISTOR_DRAW:
-                drawElement(resistor, sourceTexture, circuitElement);
+                drawElement(resistor, font, sourceTexture, circuitElement);
                 break;
             case VOLTAGE_SOURCE_DRAW:
-                drawElement(voltageSource, sourceTexture, circuitElement);
+                drawElement(voltageSource, font, sourceTexture, circuitElement);
                 break;
             case CURRENT_SOURCE_DRAW:
-                drawElement(currentSource, sourceTexture, circuitElement);
+                drawElement(currentSource, font, sourceTexture, circuitElement);
                 break;
             case WIRE_DRAW:
                 drawWire(circuitElement);
@@ -279,8 +283,51 @@ int main(void)
     return 0;
 }
 
+std::string toString(float value) {
+    std::stringstream ss;
+    ss << value;
+    return ss.str();
+}
 
-void drawElement(Texture2D texture, Rectangle sourceTextureRec, const CircuitElement& circuitElement) {
+std::string getUnit(DrawState drawState) {
+    switch (drawState)
+    {
+    case Constants::RESISTOR_DRAW:
+        return "\xCE\xA9";
+    case Constants::VOLTAGE_SOURCE_DRAW:
+        return "V";
+    case Constants::CURRENT_SOURCE_DRAW:
+        return "A";
+    default:
+        return "";
+    }
+}
+
+void drawElementText(Font font, float value, Vector2 ElementVector, Vector2 endPos, float rotation, DrawState drawState) {
+    if (Vector2Length(ElementVector) < cellSize / 2.0f)
+        return;
+    std::string text{ toString(value) + getUnit(drawState) };
+
+    bool isInLefSide = (rotation >= 0 && rotation <= 90) || (rotation <= 360 && rotation >= 270);
+
+    int textHeight = 13;
+    int textWidth = MeasureText(text.c_str(), textHeight);
+    float distance = drawState == RESISTOR_DRAW ? 15.0f : 25.0f;
+
+    Vector2 PerpendicularUnitVector = Vector2Normalize(Vector2{ (!isInLefSide ? -1.0f : 1.0f) * ElementVector.y, (isInLefSide ? -1.0f : 1.0f) * ElementVector.x });
+    Vector2 perpendicularElementVector = Vector2Scale(PerpendicularUnitVector, distance);
+    Vector2 midpoint = Vector2Subtract(endPos, Vector2Scale(ElementVector,  0.5f));
+
+    Vector2 textPos = Vector2Add(midpoint, perpendicularElementVector);
+
+    textPos.x -= textWidth / 2.0f;
+    textPos.y -= textHeight / 2.0f;
+  
+
+    DrawTextEx(font, text.c_str(), textPos, textHeight, 1, BLACK);
+}
+
+void drawElement(Texture2D texture, Font font, Rectangle sourceTextureRec, const CircuitElement& circuitElement) {
     if (!circuitElement.startNode || !circuitElement.endNode)
         return;
 
@@ -294,6 +341,8 @@ void drawElement(Texture2D texture, Rectangle sourceTextureRec, const CircuitEle
 
     float ce_rotation = 180.0f - (Vector2Angle(Vector2Subtract(circuitElement.startNode->pos, circuitElement.endNode->pos), Vector2{ 1,0 }) * 180.0f / PI);
     Vector2 ce_origin = { 0, dest.height / 2.0f };
+
+    drawElementText(font, 5, ElementV, circuitElement.endNode->pos, ce_rotation, circuitElement.state);
 
     if (Vector2Length(ElementV) > cellSize) {
         DrawLineEx({ dest.x, dest.y }, Vector2Add({ dest.x, dest.y }, Vector2Scale(Vector2Normalize(ElementV), lineLength)), 2.0f, WIRE_COLOR);
@@ -362,8 +411,7 @@ std::vector<Number> SolveCircuit(std::list<NodeObject>& nodes, std::list<Circuit
 }
 
 // TODO
-// fix the start and end are the same
-// render statusText
+// fix when the start and end are the same
 // hover over elements
 // change circuit element value
 // refactor
