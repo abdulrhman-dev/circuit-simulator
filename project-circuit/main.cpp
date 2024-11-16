@@ -8,13 +8,13 @@
 #include "Circuit.h"
 
 inline namespace Constants {
-    inline constexpr int width = 800;
+    inline constexpr int width = 1200;
     inline constexpr int height = 800;
     inline constexpr float cellSize = 40;
     inline constexpr float lineNum = width / cellSize - 1;
 
-    Color GRID_COLOR { 212, 212, 212, 255 };
-    Color WIRE_COLOR { 34,92,137,255 };
+    Color GRID_COLOR{ 212, 212, 212, 255 };
+    Color WIRE_COLOR{ 34,92,137,255 };
 
 
     enum DrawState {
@@ -28,7 +28,7 @@ inline namespace Constants {
 struct NodeObject;
 
 struct CircuitElement {
-    DrawState state { RESISTOR_DRAW };
+    DrawState state{ RESISTOR_DRAW };
     NodeObject* startNode{ nullptr };
     NodeObject* endNode{ nullptr };
 };
@@ -48,12 +48,15 @@ std::vector<Number> SolveCircuit(std::list<NodeObject>& nodes, std::list<Circuit
 
 int main(void)
 {
-    SetConfigFlags(FLAG_MSAA_4X_HINT);
+    SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT);
 
     InitWindow(width, height, "Circuit Simulator");
-    
+
 
     SetTargetFPS(60);
+    int codePointCount = 0;
+    Font font = LoadFont("./dejavu.fnt");
+    SetTextureFilter(font.texture, TEXTURE_FILTER_BILINEAR);
 
     Texture2D resistor = LoadTexture("./Resistor.png");
     Texture2D voltageSource = LoadTexture("./Voltage Source.png");
@@ -61,7 +64,7 @@ int main(void)
 
 
     Rectangle sourceTexture = { 0.0f, 0.0f, (float)resistor.width, (float)resistor.height };
-    Rectangle destTextureRec = { 0.0f, 0.0f, cellSize, cellSize};
+    Rectangle destTextureRec = { 0.0f, 0.0f, cellSize, cellSize };
 
     std::list<NodeObject> nodes{};
     std::list<CircuitElement> circuitElements{};
@@ -69,7 +72,7 @@ int main(void)
 
 
     Vector2 hoverdCircle{ -1, -1 };
-    Vector2 origin{ 0, cellSize / 2.0f};
+    Vector2 origin{ 0, cellSize / 2.0f };
 
     CircuitElement currentCircuitElement{};
 
@@ -78,7 +81,7 @@ int main(void)
 
     DrawState currentDrawState{ RESISTOR_DRAW };
 
-    int nodeCounter{0};
+    int nodeCounter{ 0 };
 
     Vector2 ElementVector;
     float ElementLength = 0;
@@ -86,38 +89,38 @@ int main(void)
     float rotation = 0;
 
     std::vector<Number> solution;
-    bool showSolution = false;
-    std::string text{};
+    bool showStatus = false;
+    std::string statusText{};
 
     int ground = 0;
 
     while (!WindowShouldClose()) {
         hoverdCircle = { -1, -1 };
         clickedHover = false;
-        showSolution = false;
+        showStatus = false;
 
         if (IsKeyPressed(KEY_R)) currentDrawState = RESISTOR_DRAW;
-        if (IsKeyPressed(KEY_V)) currentDrawState = VOLTAGE_SOURCE_DRAW;
-        if (IsKeyPressed(KEY_C)) currentDrawState = CURRENT_SOURCE_DRAW;
-        if (IsKeyPressed(KEY_W)) currentDrawState = WIRE_DRAW;
-        if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_ENTER)) solution = SolveCircuit(nodes, circuitElements);
+        else if (IsKeyPressed(KEY_V)) currentDrawState = VOLTAGE_SOURCE_DRAW;
+        else if (IsKeyPressed(KEY_C)) currentDrawState = CURRENT_SOURCE_DRAW;
+        else if (IsKeyPressed(KEY_W)) currentDrawState = WIRE_DRAW;
+        else if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_ENTER)) solution = SolveCircuit(nodes, circuitElements);
 
-      
+
         for (auto& node : nodes) {
-            if (CheckCollisionPointCircle(GetMousePosition(), node.pos, cellSize / 3.0)) {
+            if (CheckCollisionPointCircle(GetMousePosition(), node.pos, cellSize / 3.0f)) {
                 clickedHover = true;
                 if (node.solved && solution.size() > getRealNode(node.graphNode.value, ground)) {
-                    showSolution = true;
-                    float value = node.graphNode.value == ground ? 0 : solution[getRealNode(node.graphNode.value, ground)];
-                    text = "V" + std::to_string(node.graphNode.value) + " = " + std::to_string(value) + "V";
+                    showStatus = true;
+                    float value = node.graphNode.value == ground ? 0.0f : static_cast<float>(solution[getRealNode(node.graphNode.value, ground)]);
+                    statusText = "V = " + std::to_string(value) + "V";
                 }
 
                 if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                     if (drawCircuitElement) {
                         currentCircuitElement.endNode = &node;
                         currentCircuitElement.state = currentDrawState;
-                        currentCircuitElement.endNode->graphNode.edges.push_back(Graph::Edge { currentCircuitElement.startNode->graphNode, currentDrawState == WIRE_DRAW ? true : false });
-                        currentCircuitElement.startNode->graphNode.edges.push_back(Graph::Edge { currentCircuitElement.endNode->graphNode, currentDrawState == WIRE_DRAW ? true : false });
+                        currentCircuitElement.endNode->graphNode.edges.push_back(Graph::Edge{ currentCircuitElement.startNode->graphNode, currentDrawState == WIRE_DRAW ? true : false });
+                        currentCircuitElement.startNode->graphNode.edges.push_back(Graph::Edge{ currentCircuitElement.endNode->graphNode, currentDrawState == WIRE_DRAW ? true : false });
                         circuitElements.push_back(currentCircuitElement);
                     }
                     else {
@@ -133,7 +136,7 @@ int main(void)
             for (int i = 1; i <= lineNum; ++i) {
                 for (int j = 1; j <= lineNum; ++j) {
                     Vector2 checkCircleCenter = Vector2{ cellSize * i, cellSize * j };
-                    if (CheckCollisionPointCircle(GetMousePosition(), checkCircleCenter, cellSize / 3.0)) {
+                    if (CheckCollisionPointCircle(GetMousePosition(), checkCircleCenter, cellSize / 3.0f)) {
                         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                             nodes.push_back({ checkCircleCenter, {nodeCounter++} });
 
@@ -161,7 +164,7 @@ int main(void)
                 }
             }
         }
-      
+
 
         if (drawCircuitElement) {
             if (currentCircuitElement.startNode) {
@@ -195,8 +198,8 @@ int main(void)
         }
 
         for (int i = 1; i <= lineNum; ++i) {
-            DrawLineEx(Vector2{ cellSize * i, 0}, Vector2{ cellSize * i, height}, 1.0, GRID_COLOR);
-        }  
+            DrawLineEx(Vector2{ cellSize * i, 0 }, Vector2{ cellSize * i, height }, 1.0, GRID_COLOR);
+        }
 
         if (drawCircuitElement && currentDrawState != WIRE_DRAW && currentCircuitElement.startNode) {
             destTextureRec.x = currentCircuitElement.startNode->pos.x;
@@ -220,14 +223,12 @@ int main(void)
                 break;
             }
 
-          
+            DrawTexturePro(currentTexture, sourceTexture, destTextureRec, origin, rotation, WHITE);
 
-           DrawTexturePro(currentTexture, sourceTexture, destTextureRec, origin, rotation, WHITE);
-
-           if (drawExtentions) {
-               DrawLineEx({ destTextureRec.x, destTextureRec.y }, Vector2Add({ destTextureRec.x, destTextureRec.y }, Vector2Scale(Vector2Normalize(ElementVector), lineLength)), 2.0f, WIRE_COLOR);
-               DrawLineEx(Vector2Subtract(GetMousePosition(), Vector2Scale(Vector2Normalize(ElementVector), lineLength)), GetMousePosition(), 2.0f, WIRE_COLOR);
-           }
+            if (drawExtentions) {
+                DrawLineEx({ destTextureRec.x, destTextureRec.y }, Vector2Add({ destTextureRec.x, destTextureRec.y }, Vector2Scale(Vector2Normalize(ElementVector), lineLength)), 2.0f, WIRE_COLOR);
+                DrawLineEx(Vector2Subtract(GetMousePosition(), Vector2Scale(Vector2Normalize(ElementVector), lineLength)), GetMousePosition(), 2.0f, WIRE_COLOR);
+            }
         }
 
         if (drawCircuitElement && currentDrawState == WIRE_DRAW && currentCircuitElement.startNode) {
@@ -263,8 +264,8 @@ int main(void)
             DrawCircleV(node.pos, 5, WIRE_COLOR);
         }
 
-        if (showSolution) {
-            DrawText(text.c_str(), 20, 20, 20, BLACK);
+        if (showStatus) {
+            DrawTextEx(font, statusText.c_str(), Vector2{20, 20}, 20, 1, BLACK);
         }
 
         EndDrawing();
@@ -311,7 +312,7 @@ void drawWire(const CircuitElement& circuitElement) {
 }
 
 std::vector<Number> SolveCircuit(std::list<NodeObject>& nodes, std::list<CircuitElement>& circuitElements) {
-    int nodeCounter{0};
+    int nodeCounter{ 0 };
 
     for (auto& node : nodes) {
         node.solved = true;
@@ -352,6 +353,18 @@ std::vector<Number> SolveCircuit(std::list<NodeObject>& nodes, std::list<Circuit
         std::cout << pair.first << " = " << pair.second << ", ";
     }
     std::cout << '\n';
-    
+
+    std::for_each(nodes.begin(), nodes.end(), [](NodeObject& node) {
+        node.graphNode.visited = false;
+        });
+
     return solution;
 }
+
+// TODO
+// fix the start and end are the same
+// render statusText
+// hover over elements
+// change circuit element value
+// refactor
+// calculate the voltage diff and current in any element
