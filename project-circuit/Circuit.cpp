@@ -11,8 +11,7 @@ void Circuit::addElement(std::unique_ptr<CircuitStamp> ce) {
 }
 
 std::vector<Number> Circuit::solve() {
-    const int unkownNodes = static_cast<int>(nodes.size()) - 1;
-    const int voltageStartingRow = unkownNodes;
+    const int unkownNodes = getUnkownsNumber();
     AugmentedMatrix<Number> solvingMatrix(unkownNodes + m_voltageSourcesCount);
 
     int currentVoltageSource = 0;
@@ -26,7 +25,7 @@ std::vector<Number> Circuit::solve() {
                 continue;
             }
 
-            v->setVoltageRow(voltageStartingRow + currentVoltageSource);
+            v->setVoltageRow(unkownNodes + currentVoltageSource);
             ++currentVoltageSource;
         }
 

@@ -34,6 +34,7 @@ struct CircuitElement {
     NodeObject* startNode{ nullptr };
     NodeObject* endNode{ nullptr };
     float value{5.0f};
+    float current{0.0f};
 };
 
 
@@ -125,8 +126,8 @@ int main(void)
                     showStatus = true;
                     statusText = "\xCE\x94V=" + toString(calculateVoltageDiff(circuitElement)) + "V";
 
-                    if (circuitElement.state == RESISTOR_DRAW) {
-                        statusText += ", I= " + toString(calculateVoltageDiff(circuitElement) / circuitElement.value) + "A";
+                    if (circuitElement.state != WIRE_DRAW) {
+                        statusText += ", I= " + toString(circuitElement.current) + "A";
                     }
                 }
                
@@ -446,7 +447,10 @@ bool SolveCircuit(std::list<NodeObject>& nodes, std::list<CircuitElement>& circu
     if (solution.size() <= 0)
         return false;
 
+
+
     for (auto& node : nodes) {
+        node.graphNode.visited = false;
         node.solved = true;
 
         if (node.graphNode.value == ground) {
@@ -459,6 +463,34 @@ bool SolveCircuit(std::list<NodeObject>& nodes, std::list<CircuitElement>& circu
         }
     }
 
+    int extractedVoltageCurrents = 0;
+    int unkownNodes = circuit.getUnkownsNumber();
+
+    for (auto& circuitElement : circuitElements) {
+        std::size_t solutionIndex;
+
+        switch (circuitElement.state)
+        {
+        case RESISTOR_DRAW:
+            circuitElement.current = calculateVoltageDiff(circuitElement) / circuitElement.value;
+            break;
+
+        case VOLTAGE_SOURCE_DRAW:
+            solutionIndex = static_cast<std::size_t>(unkownNodes + extractedVoltageCurrents);
+
+            if (solution.size() > solutionIndex) {
+                circuitElement.current = solution[solutionIndex];
+                ++extractedVoltageCurrents;
+            }
+
+            break;
+
+        case CURRENT_SOURCE_DRAW:
+            circuitElement.current = circuitElement.value;
+            break;
+        }
+    }
+
     return true;
 }
 
@@ -466,4 +498,3 @@ bool SolveCircuit(std::list<NodeObject>& nodes, std::list<CircuitElement>& circu
 // fix when the start and end are the same
 // change circuit element value
 // refactor
-// calculate the voltage diff and current in any element

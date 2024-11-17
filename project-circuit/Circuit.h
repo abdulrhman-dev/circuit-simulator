@@ -20,6 +20,8 @@ public:
     UnkownValuePair makeUnkownValuePair(const std::vector<Number>& v);
 
     void setGround(int value) { m_ground = value; }
+    
+    int getUnkownsNumber() const { return static_cast<int>(nodes.size()) - 1; }
 private:
     int m_ground{ 0 };
     int m_voltageSourcesCount{ 0 };
