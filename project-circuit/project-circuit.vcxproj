@@ -143,7 +143,9 @@
     <ClCompile Include="CircuitCalculations.cpp" />
     <ClCompile Include="CircuitCalculations.h" />
     <ClCompile Include="CircuitStamp.cpp" />
+    <ClCompile Include="Events.cpp" />
     <ClCompile Include="CurrentCircuitElement.cpp" />
+    <ClCompile Include="Events.h" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="CircuitElement.cpp" />

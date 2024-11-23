@@ -37,23 +37,32 @@ void CurrentCircuitElement::reCalculateRenderInfo(Vector2 endPos) {
     }
 }
 
-void CurrentCircuitElement::addNode(NodeObject& node, DrawState currDrawState, std::list<CircuitElement>& circuitElements) {
+void CurrentCircuitElement::addNode(NodeObject& node, DrawState currDrawState) {
     if (drawingElement) {
         endNode = &node;
         state = currDrawState;
         endNode->addEdge(startNode, currDrawState);
         startNode->addEdge(endNode, currDrawState);
         reCalculateRenderInfo(endNode->pos);
-        circuitElements.push_back(*this);
+        m_circuitElements.push_back(*this);
+        reset();
     }
     else {
         startNode = &node;
     }
 
     drawingElement = !drawingElement;
-    reset();
 }
 
+void CurrentCircuitElement::reset() {
+    if (drawingElement)
+        return;
+
+    startNode = nullptr;
+    endNode = nullptr;
+    value = 5.0f;
+    current = 0.0f;
+}
 
 void CurrentCircuitElement::draw(Font font, TexturesArray& textures) {
     if (!drawingElement)
@@ -65,15 +74,4 @@ void CurrentCircuitElement::draw(Font font, TexturesArray& textures) {
     }
 
     drawElement(GetMousePosition(), font, textures);
-}
-
-
-void CurrentCircuitElement::reset() {
-    if (drawingElement)
-        return;
-
-    startNode = nullptr;
-    endNode = nullptr;
-    value = 5.0f;
-    current = 0.0f;
 }
