@@ -140,9 +140,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Circuit.cpp" />
+    <ClCompile Include="CircuitCalculations.cpp" />
+    <ClCompile Include="CircuitCalculations.h" />
     <ClCompile Include="CircuitStamp.cpp" />
+    <ClCompile Include="CurrentCircuitElement.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="CircuitElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Circuit.h" />
@@ -151,6 +155,8 @@
     <ClInclude Include="Output.h" />
     <ClInclude Include="MatrixSolve.h" />
     <ClInclude Include="AugmentedMatrix.h" />
+    <ClInclude Include="TextHelper.h" />
+    <ClInclude Include="UIConstants.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

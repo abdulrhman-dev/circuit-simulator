@@ -8,7 +8,8 @@ public:
     enum CircuitType {
         resistor,
         currentSource,
-        voltageSource
+        voltageSource,
+        shortCircuit
     };
 
     CircuitStamp(int nodeI, int nodeJ, Number value, CircuitType type)

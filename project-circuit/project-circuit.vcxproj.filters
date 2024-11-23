@@ -1,15 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Solver">
-      <UniqueIdentifier>{de3ff742-8631-44a7-aba8-fb173af6eb2b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Solver\Header Files">
-      <UniqueIdentifier>{aece0940-9aa1-470e-bf85-197ccab5faca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Solver\Source Files">
-      <UniqueIdentifier>{a3820676-cf39-41f5-97c8-924237b6f54b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GUI">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
@@ -21,6 +12,15 @@
     <Filter Include="GUI\Source Files">
       <UniqueIdentifier>{e68e39b6-0047-4a7e-b11f-700fda40fd71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Solver">
+      <UniqueIdentifier>{de3ff742-8631-44a7-aba8-fb173af6eb2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Solver\Header Files">
+      <UniqueIdentifier>{aece0940-9aa1-470e-bf85-197ccab5faca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Solver\Source Files">
+      <UniqueIdentifier>{a3820676-cf39-41f5-97c8-924237b6f54b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Circuit.cpp">
@@ -29,17 +29,26 @@
     <ClCompile Include="CircuitStamp.cpp">
       <Filter>Solver\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graph.cpp">
+    <ClCompile Include="CircuitElement.cpp">
       <Filter>GUI\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Graph.cpp">
+      <Filter>Solver\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CurrentCircuitElement.cpp">
+      <Filter>GUI\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CircuitCalculations.h">
+      <Filter>GUI\Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CircuitCalculations.cpp">
       <Filter>GUI\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Graph.h">
-      <Filter>GUI\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MatrixSolve.h">
       <Filter>Solver\Header Files</Filter>
     </ClInclude>
@@ -54,6 +63,15 @@
     </ClInclude>
     <ClInclude Include="Output.h">
       <Filter>GUI\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UIConstants.h">
+      <Filter>GUI\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextHelper.h">
+      <Filter>GUI\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graph.h">
+      <Filter>Solver\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
