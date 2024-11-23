@@ -148,6 +148,7 @@
     <ClInclude Include="Circuit.h" />
     <ClInclude Include="CircuitStamp.h" />
     <ClInclude Include="Graph.h" />
+    <ClInclude Include="Output.h" />
     <ClInclude Include="MatrixSolve.h" />
     <ClInclude Include="AugmentedMatrix.h" />
   </ItemGroup>

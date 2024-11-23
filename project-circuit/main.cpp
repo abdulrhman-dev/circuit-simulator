@@ -8,7 +8,7 @@
 #include "Graph.h"
 #include "Circuit.h"
 
-inline namespace Constants {
+inline namespace UI_CONSTANTS {
     inline constexpr int width = 1200;
     inline constexpr int height = 800;
     inline constexpr float cellSize = 40;
@@ -17,7 +17,6 @@ inline namespace Constants {
 
     Color GRID_COLOR{ 212, 212, 212, 255 };
     Color WIRE_COLOR{ 34,92,137,255 };
-
 
     enum DrawState {
         RESISTOR_DRAW,
@@ -178,8 +177,6 @@ int main(void)
             }
 
 
-          
-
             for (int i = 1; i <= lineNum && !hoverTriggerd; ++i) {
                 for (int j = 1; j <= lineNum; ++j) {
                     Vector2 checkCircleCenter = Vector2{ cellSize * i, cellSize * j };
@@ -214,13 +211,12 @@ int main(void)
 
 
 
-            if (drawCircuitElement) {
-                if (currentCircuitElement.startNode) {
-                    ElementVector = Vector2Subtract(GetMousePosition(), Vector2{ currentCircuitElement.startNode->pos.x, currentCircuitElement.startNode->pos.y });
-                    ElementLength = Vector2Length(ElementVector);
-                    lineLength = (Vector2Length(ElementVector) - destTextureRec.width) / 2.0f;
-                    rotation = 180.0f - (Vector2Angle(Vector2Subtract(Vector2{ currentCircuitElement.startNode->pos.x, currentCircuitElement.startNode->pos.y }, GetMousePosition()), Vector2{ 1,0 }) * 180.0f / PI);
-                }
+            if (drawCircuitElement && currentCircuitElement.startNode) {
+                ElementVector = Vector2Subtract(GetMousePosition(), Vector2{ currentCircuitElement.startNode->pos.x, currentCircuitElement.startNode->pos.y });
+                ElementLength = Vector2Length(ElementVector);
+                lineLength = (Vector2Length(ElementVector) - destTextureRec.width) / 2.0f;
+                rotation = 180.0f - (Vector2Angle(Vector2Subtract(Vector2{ currentCircuitElement.startNode->pos.x, currentCircuitElement.startNode->pos.y }, GetMousePosition()), Vector2{ 1,0 }) * 180.0f / PI);
+           
 
                 if (ElementLength > cellSize) {
                     destTextureRec.width = cellSize;
@@ -311,8 +307,8 @@ int main(void)
             DrawTexturePro(currentTexture, sourceTexture, destTextureRec, origin, rotation, WHITE);
 
             if (drawExtentions) {
-                DrawLineEx({ destTextureRec.x, destTextureRec.y }, Vector2Add({ destTextureRec.x, destTextureRec.y }, Vector2Scale(Vector2Normalize(ElementVector), lineLength)), 2.0f, WIRE_COLOR);
-                DrawLineEx(Vector2Subtract(GetMousePosition(), Vector2Scale(Vector2Normalize(ElementVector), lineLength)), GetMousePosition(), 2.0f, WIRE_COLOR);
+                DrawLineEx({ destTextureRec.x, destTextureRec.y }, Vector2Add({ destTextureRec.x, destTextureRec.y }, Vector2Scale(Vector2Normalize(ElementVector), lineLength)), 2.0f, RED);
+                DrawLineEx(Vector2Subtract(GetMousePosition(), Vector2Scale(Vector2Normalize(ElementVector), lineLength)), GetMousePosition(), 2.0f, GREEN);
             }
         }
 
@@ -406,8 +402,9 @@ void drawElementText(Font font, float value, Vector2 ElementVector, Vector2 endP
 
     int textHeight = 13;
     int textWidth = MeasureText(text.c_str(), textHeight);
-    std::cout << rotation << '\n';
-    float distance = drawState == RESISTOR_DRAW ? 17.0f + abs(textWidth / 3.0f * sin(DEG2RAD * (rotation))) : 25.0f + abs(textWidth / 3.0f * sin(DEG2RAD * (rotation)));
+
+    float extraDistance = abs(textWidth / 3.0f * sin(DEG2RAD * (rotation)));
+    float distance = drawState == RESISTOR_DRAW ? 14.0f + extraDistance : 25.0f + extraDistance;
 
     Vector2 PerpendicularUnitVector = Vector2Normalize(Vector2{ (!isInLefSide ? -1.0f : 1.0f) * ElementVector.y, (isInLefSide ? -1.0f : 1.0f) * ElementVector.x });
     Vector2 perpendicularElementVector = Vector2Scale(PerpendicularUnitVector, distance);
@@ -563,3 +560,7 @@ bool SolveCircuit(std::list<NodeObject>& nodes, std::list<CircuitElement>& circu
 // make blinking animation when editing a circuits element 
 // make insert mode which allows the insertion of the value of all the circuit elements
 // add a direction indecator for resistors and voltage sources indicating which direction the current is flowing
+// multiple grounds
+// hide text mode
+// - show the value when hovering
+// - when editing the circuit element value 

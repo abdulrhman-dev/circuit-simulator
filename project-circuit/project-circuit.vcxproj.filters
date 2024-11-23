@@ -1,48 +1,59 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
+    <Filter Include="Solver">
+      <UniqueIdentifier>{de3ff742-8631-44a7-aba8-fb173af6eb2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Solver\Header Files">
+      <UniqueIdentifier>{aece0940-9aa1-470e-bf85-197ccab5faca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Solver\Source Files">
+      <UniqueIdentifier>{a3820676-cf39-41f5-97c8-924237b6f54b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
+    <Filter Include="GUI\Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="GUI\Source Files">
+      <UniqueIdentifier>{e68e39b6-0047-4a7e-b11f-700fda40fd71}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CircuitStamp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Circuit.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Solver\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CircuitStamp.cpp">
+      <Filter>Solver\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Graph.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GUI\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GUI\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AugmentedMatrix.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Graph.h">
+      <Filter>GUI\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MatrixSolve.h">
-      <Filter>Header Files</Filter>
+      <Filter>Solver\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CircuitStamp.h">
-      <Filter>Header Files</Filter>
+      <Filter>Solver\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AugmentedMatrix.h">
+      <Filter>Solver\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Circuit.h">
-      <Filter>Header Files</Filter>
+      <Filter>Solver\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Graph.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Output.h">
+      <Filter>GUI\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
