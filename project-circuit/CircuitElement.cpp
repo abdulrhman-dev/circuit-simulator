@@ -30,15 +30,18 @@ void CircuitElement::drawElementText(Font font, Vector2 endPos ) {
 
     std::string text{ toString(value) + getUnit(state) };
 
-    bool isInLefSide = (RenderInfo.rotation >= 0 && RenderInfo.rotation <= 90) || (RenderInfo.rotation <= 360 && RenderInfo.rotation >= 270);
+    bool isInLeftSide = (RenderInfo.rotation >= 0 && RenderInfo.rotation <= 90) || (RenderInfo.rotation <= 360 && RenderInfo.rotation >= 270);
 
-    int textHeight = 13;
-    int textWidth = MeasureText(text.c_str(), textHeight);
+    float fontSize = 13;
+    Vector2 textSize = MeasureTextEx(font, text.c_str(), fontSize, 1.0f);
 
-    float extraDistance = abs(textWidth / 3.0f * sin(DEG2RAD * (RenderInfo.rotation)));
+    float textWidth = textSize.x;
+    float textHeight = textSize.y;
+
+    float extraDistance = abs(textWidth / 2.4f * sin(DEG2RAD * (RenderInfo.rotation)));
     float distance = state == DrawState::RESISTOR ? 14.0f + extraDistance : 25.0f + extraDistance;
 
-    Vector2 PerpendicularUnitVector = Vector2Normalize(Vector2{ (!isInLefSide ? -1.0f : 1.0f) * RenderInfo.ElementVector.y, (isInLefSide ? -1.0f : 1.0f) * RenderInfo.ElementVector.x });
+    Vector2 PerpendicularUnitVector = Vector2Normalize(Vector2{ (!isInLeftSide ? -1.0f : 1.0f) * RenderInfo.ElementVector.y, (isInLeftSide ? -1.0f : 1.0f) * RenderInfo.ElementVector.x });
     Vector2 perpendicularElementVector = Vector2Scale(PerpendicularUnitVector, distance);
     Vector2 midpoint = Vector2Subtract(endPos, Vector2Scale(RenderInfo.ElementVector, 0.5f));
 
@@ -48,5 +51,5 @@ void CircuitElement::drawElementText(Font font, Vector2 endPos ) {
     textPos.y -= textHeight / 2.0f;
 
 
-    DrawTextEx(font, text.c_str(), textPos, textHeight, 1, BLACK);
+    DrawTextEx(font, text.c_str(), textPos, fontSize, 1, BLACK);
 }
