@@ -23,7 +23,7 @@ void Events::checkNodes(std::list<NodeObject>& nodes) {
 
 }
 
-void Events::checkCircuitElements(std::list<CircuitElement>& circuitElements) {
+void Events::checkCircuitElements(std::list<CircuitElement>& circuitElements, bool& inputMode, CircuitElement*& inputCircuitElement) {
     if (m_hoverTriggerd)
         return;
 
@@ -32,8 +32,8 @@ void Events::checkCircuitElements(std::list<CircuitElement>& circuitElements) {
         if (CheckCollisionPointLine(GetMousePosition(), circuitElement.startNode->pos, circuitElement.endNode->pos, UI::circuitElementHeight)) {
             m_hoverTriggerd = true;
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-              /*  inputMode = true;
-                inputCircuitElement = &circuitElement;*/
+                inputMode = true;
+                inputCircuitElement = &circuitElement;
                 break;
             }
 

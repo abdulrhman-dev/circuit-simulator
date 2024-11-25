@@ -20,7 +20,7 @@ public:
     {}
 
     void checkNodes(std::list<NodeObject>& nodes);
-    void checkCircuitElements(std::list<CircuitElement>& nodes);
+    void checkCircuitElements(std::list<CircuitElement>& nodes, bool& inputMode, CircuitElement*& inputCircuitElement);
     void checkGridNodes(std::list<NodeObject>& nodes, Vector2& hoverdCircle);
 
     void reset() { m_hoverTriggerd = false; }

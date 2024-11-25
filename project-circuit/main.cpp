@@ -29,11 +29,14 @@ int main(void)
     Font font = LoadFont("./dejavu.fnt");
     SetTextureFilter(font.texture, TEXTURE_FILTER_TRILINEAR);
 
-    TexturesArray textures{ LoadTexture("./Resistor.png"), LoadTexture("./Voltage Source.png"),  LoadTexture("./Current Source.png") };
+    TexturesArray textures{ 
+        LoadTexture("./Resistor.png"),
+        LoadTexture("./Voltage Source.png"),
+        LoadTexture("./Current Source.png") 
+    };
 
-    // WIRE  doesn't have a texture and it, in this case represents, the count of elements
+    // WIRE  doesn't have a texture and it, in this case, represents the count of elements
     assert(textures.size() == static_cast<std::size_t>(DrawState::WIRE));
-
 
     std::list<NodeObject> nodes{};
     std::list<CircuitElement> circuitElements{};
@@ -47,12 +50,12 @@ int main(void)
     bool solved = false;
     int ground = 0;
 
-    Vector2 hoverdCircle{ -1, -1 };
 
     bool inputMode = false;
     std::string input{};
     CircuitElement* inputCircuitElement{nullptr};
 
+    Vector2 hoverdCircle{ -1, -1 };
 
     while (!WindowShouldClose())     {
         hoverdCircle = { -1, -1 };
@@ -68,7 +71,7 @@ int main(void)
             else if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_ENTER)) solved = SolveCircuit(nodes, circuitElements);
            
             events.checkNodes(nodes);
-            events.checkCircuitElements(circuitElements);
+            events.checkCircuitElements(circuitElements, inputMode, inputCircuitElement);
             events.checkGridNodes(nodes, hoverdCircle);
 
             currentElement.update(currentDrawState);
@@ -95,7 +98,7 @@ int main(void)
 
             if (inputCircuitElement && input != "")
                 inputCircuitElement->value = std::stof(input);
-            else if (input == "")
+            else if (inputCircuitElement && input == "")
                 inputCircuitElement->value = 0.0f;
 
             if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER)) {
@@ -160,3 +163,5 @@ int main(void)
 // - show the value when hovering
 // - when editing the circuit element value 
 // add CircuitElement in a more effecient way
+// add a way to export the solution as an excel file
+// add a way to label nodes
