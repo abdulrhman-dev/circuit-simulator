@@ -73,5 +73,8 @@
     <ClInclude Include="Graph.h">
       <Filter>Solver\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>GUI\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
