@@ -118,6 +118,8 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -136,6 +138,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -143,7 +147,9 @@
     <ClCompile Include="CircuitCalculations.cpp" />
     <ClCompile Include="CircuitCalculations.h" />
     <ClCompile Include="CircuitStamp.cpp" />
+    <ClCompile Include="Events.cpp" />
     <ClCompile Include="CurrentCircuitElement.cpp" />
+    <ClCompile Include="Events.h" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="CircuitElement.cpp" />

@@ -4,8 +4,8 @@
 
 
 namespace UI {
-    inline constexpr int width = 1200;
-    inline constexpr int height = 800;
+    inline constexpr int width = 1000;
+    inline constexpr int height = 600;
     inline constexpr float cellSize = 40;
     inline constexpr float lineNum = width / cellSize - 1;
     inline constexpr float circuitElementHeight = 13.0f;

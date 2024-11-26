@@ -18,10 +18,6 @@ struct NodeObject
     bool solved{ false };
     float value{};
 
-    NodeObject(Vector2& pos_)
-        : pos(pos_)
-    {}
-
     void addEdge(NodeObject* node, DrawState& state) {
         graphNode.edges.push_back(Graph::Edge{ node->graphNode, state == DrawState::WIRE ? true : false });
     }
@@ -41,7 +37,7 @@ struct CircuitElementRenderInfo {
     bool drawExtentions  { false };
 };
 
-struct CircuitElement {
+class CircuitElement {
 public:
     DrawState state { DrawState::RESISTOR };
     NodeObject* startNode{ nullptr };
@@ -57,18 +53,48 @@ protected:
 };
 
 
-struct CurrentCircuitElement : public CircuitElement {
+class CurrentCircuitElement : public CircuitElement {
 private:
     bool drawingElement{ false };
+    std::list<CircuitElement>& m_circuitElements;
 public:
-    void addNode(NodeObject& node, DrawState currDrawState, std::list<CircuitElement>& circuitElements);
+    CurrentCircuitElement(std::list<CircuitElement>& circuitElements)
+        : m_circuitElements(circuitElements)
+    {}
+
+    void addNode(NodeObject& node, DrawState currDrawState);
     void update(DrawState currState);
     void reCalculateRenderInfo(Vector2 endPos);
     void draw(Font font, TexturesArray& textures);
     void reset();
 };
 
-namespace Collesion {
 
-}
+class StatusText {
+private:
+    bool m_showStatus = false;
+    std::string m_statusText{};
+    Font m_font;
+
+public:
+    StatusText(Font font)
+       : m_font(font)
+    {}
+
+    void addText(const std::string& text) { 
+        m_showStatus = true;
+        m_statusText += text;
+    }
+
+    void clearText() { m_statusText = ""; }
+
+    void reset() { m_showStatus = false; }
+
+    void draw() {
+        if (m_showStatus) {
+            DrawTextEx(m_font, m_statusText.c_str(), Vector2{ 20, 20 }, 20, 1, BLACK);
+        }
+    }
+};
+
 #endif // ! OUTPUT_H

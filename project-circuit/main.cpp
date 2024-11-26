@@ -11,6 +11,7 @@
 #include "Graph.h"
 #include "Output.h"
 #include "CircuitCalculations.h"
+#include "Events.h"
 
 bool SolveCircuit(std::list<NodeObject>& nodes, std::list<CircuitElement>& circuitElements);
 
@@ -28,41 +29,38 @@ int main(void)
     Font font = LoadFont("./dejavu.fnt");
     SetTextureFilter(font.texture, TEXTURE_FILTER_TRILINEAR);
 
-    TexturesArray textures{ LoadTexture("./Resistor.png"), LoadTexture("./Voltage Source.png"),  LoadTexture("./Current Source.png") };
+    TexturesArray textures{ 
+        LoadTexture("./Resistor.png"),
+        LoadTexture("./Voltage Source.png"),
+        LoadTexture("./Current Source.png") 
+    };
 
-    // WIRE  doesn't have a texture and it in this case represents the count of elements
+    // WIRE  doesn't have a texture and it, in this case, represents the count of elements
     assert(textures.size() == static_cast<std::size_t>(DrawState::WIRE));
-
 
     std::list<NodeObject> nodes{};
     std::list<CircuitElement> circuitElements{};
 
-
-    Vector2 hoverdCircle{ -1, -1 };
-    Vector2 origin{ 0,UI::cellSize / 2.0f };
-
-    CurrentCircuitElement currentElement{};
-
+    CurrentCircuitElement currentElement{ circuitElements };
     DrawState currentDrawState{ DrawState::RESISTOR };
-
+    StatusText statusText(font);
+   
+    Events events(currentElement,currentDrawState, statusText);
 
     bool solved = false;
-    bool showStatus = false;
-    std::string statusText{};
-
     int ground = 0;
 
-    bool hoverTriggerd = false;
 
     bool inputMode = false;
     std::string input{};
     CircuitElement* inputCircuitElement{nullptr};
 
+    Vector2 hoverdCircle{ -1, -1 };
 
-    while (!WindowShouldClose()) {
+    while (!WindowShouldClose())     {
         hoverdCircle = { -1, -1 };
-        hoverTriggerd = false;
-        showStatus = false;
+        statusText.reset();
+        events.reset();
 
         
         if (!inputMode) {
@@ -71,69 +69,10 @@ int main(void)
             else if (IsKeyPressed(KEY_C)) currentDrawState = DrawState::CURRENT_SOURCE;
             else if (IsKeyPressed(KEY_W)) currentDrawState = DrawState::WIRE;
             else if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_ENTER)) solved = SolveCircuit(nodes, circuitElements);
-
-            for (auto& node : nodes) {
-                if (CheckCollisionPointCircle(GetMousePosition(), node.pos, UI::cellSize / 3.0f)) {
-                    hoverTriggerd = true;
-
-                    if (node.solved) {
-                        showStatus = true;
-                        statusText = "V = " + toString(node.value) + "V";
-                    }
-
-                    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                        currentElement.addNode(node, currentDrawState, circuitElements);
-                    }
-                    break;
-                }
-            }
-
-            for (auto& circuitElement : circuitElements) {
-                if (hoverTriggerd)
-                    break;
-
-                if (CheckCollisionPointLine(GetMousePosition(), circuitElement.startNode->pos, circuitElement.endNode->pos, UI::circuitElementHeight)) {
-                    hoverTriggerd = true;
-                    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                        inputMode = true;
-                        inputCircuitElement = &circuitElement;
-                        //input = toString(inputCircuitElement->value);
-                        break;
-                    }
-
-                    if (circuitElement.startNode->solved && circuitElement.endNode->solved) {
-                        showStatus = true;
-                        statusText = "\xCE\x94V=" + toString(calculateVoltageDiff(circuitElement)) + "V";
-
-                        if (circuitElement.state != DrawState::WIRE) {
-                            statusText += ", I= " + toString(circuitElement.current) + "A";
-                        }
-                    }
-
-                    break;
-                }
-            }
-
-
-            for (int i = 1; i <= UI::lineNum && !hoverTriggerd; ++i) {
-                for (int j = 1; j <= UI::lineNum; ++j) {
-                    Vector2 checkCircleCenter = Vector2{ UI::cellSize * i, UI::cellSize * j };
-                    if (CheckCollisionPointCircle(GetMousePosition(), checkCircleCenter, UI::cellSize / 3.0f)) {
-                        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                            nodes.push_back({ checkCircleCenter });
-
-                            currentElement.addNode(nodes.back(), currentDrawState, circuitElements);
-
-                            break;
-                        }
-
-                        hoverdCircle = checkCircleCenter;
-                        hoverTriggerd = true;
-                        break;
-                    }
-
-                }
-            }
+           
+            events.checkNodes(nodes);
+            events.checkCircuitElements(circuitElements, inputMode, inputCircuitElement);
+            events.checkGridNodes(nodes, hoverdCircle);
 
             currentElement.update(currentDrawState);
         }
@@ -159,7 +98,7 @@ int main(void)
 
             if (inputCircuitElement && input != "")
                 inputCircuitElement->value = std::stof(input);
-            else if (input == "")
+            else if (inputCircuitElement && input == "")
                 inputCircuitElement->value = 0.0f;
 
             if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER)) {
@@ -173,31 +112,24 @@ int main(void)
         BeginDrawing();
         ClearBackground(WHITE);
 
-
-        for (int i = 1; i <= UI::lineNum; ++i) {
+        for (int i = 1; i <= UI::lineNum; ++i) 
             DrawLineEx(Vector2{ 0,UI::cellSize * i }, Vector2{ UI::width, UI::cellSize * i }, 1.0, UI::GRID_COLOR);
-        }
 
-        for (int i = 1; i <= UI::lineNum; ++i) {
+        for (int i = 1; i <= UI::lineNum; ++i)
             DrawLineEx(Vector2{ UI::cellSize * i, 0 }, Vector2{ UI::cellSize * i, UI::height }, 1.0, UI::GRID_COLOR);
-        }
         
         currentElement.draw(font, textures);
 
-        for (auto& circuitElement : circuitElements) {
+        for (auto& circuitElement : circuitElements)
             circuitElement.draw(font, textures);
-        }
-
-        if (hoverdCircle.x != -1 && hoverdCircle.y != -1) {
+ 
+        if (hoverdCircle.x != -1 && hoverdCircle.y != -1) 
             DrawCircleV(hoverdCircle, 5, UI::GRID_COLOR);
-        }
-
+  
         for (const auto& node : nodes)
             node.draw();
 
-        if (showStatus) {
-            DrawTextEx(font, statusText.c_str(), Vector2{20, 20}, 20, 1, BLACK);
-        }
+        statusText.draw();
 
         EndDrawing();
     }
@@ -212,7 +144,6 @@ int main(void)
 
 // TODO
 // refactor
-// add CircuitElement in a more effecient way
 // fix when the start and end are the same
 // put a more high res version of the images
 // flip the voltage source direction
@@ -231,3 +162,6 @@ int main(void)
 // hide text mode
 // - show the value when hovering
 // - when editing the circuit element value 
+// add CircuitElement in a more effecient way
+// add a way to export the solution as an excel file
+// add a way to label nodes

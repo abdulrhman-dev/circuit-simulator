@@ -47,6 +47,12 @@
     <ClCompile Include="CircuitCalculations.cpp">
       <Filter>GUI\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Events.cpp">
+      <Filter>GUI\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Events.h">
+      <Filter>GUI\Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MatrixSolve.h">
