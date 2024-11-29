@@ -2,7 +2,6 @@
 #define UI_CONSTANTS_H
 #include "raylib.h"
 
-
 namespace UI {
     inline constexpr int width = 1000;
     inline constexpr int height = 600;

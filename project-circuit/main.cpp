@@ -10,12 +10,9 @@
 #include "Circuit.h"
 #include "Graph.h"
 #include "Output.h"
-#include "CircuitCalculations.h"
 #include "Events.h"
-
-bool SolveCircuit(std::list<NodeObject>& nodes, std::list<CircuitElement>& circuitElements);
-
-float calculateVoltageDiff(const CircuitElement& circuitElement);
+#include "Input.h"
+#include "CircuitCalculations.h"
 
 
 int main(void)
@@ -44,16 +41,12 @@ int main(void)
     CurrentCircuitElement currentElement{ circuitElements };
     DrawState currentDrawState{ DrawState::RESISTOR };
     StatusText statusText(font);
-   
-    Events events(currentElement,currentDrawState, statusText);
+    Input input(font, circuitElements);
+
+    Events events(currentElement,currentDrawState, statusText, input);
 
     bool solved = false;
     int ground = 0;
-
-
-    bool inputMode = false;
-    std::string input{};
-    CircuitElement* inputCircuitElement{nullptr};
 
     Vector2 hoverdCircle{ -1, -1 };
 
@@ -61,9 +54,8 @@ int main(void)
         hoverdCircle = { -1, -1 };
         statusText.reset();
         events.reset();
-
         
-        if (!inputMode) {
+        if (!input.isInputMode()) {
             if (IsKeyPressed(KEY_R)) currentDrawState = DrawState::RESISTOR;
             else if (IsKeyPressed(KEY_V)) currentDrawState = DrawState::VOLTAGE_SOURCE;
             else if (IsKeyPressed(KEY_C)) currentDrawState = DrawState::CURRENT_SOURCE;
@@ -71,44 +63,14 @@ int main(void)
             else if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_ENTER)) solved = SolveCircuit(nodes, circuitElements);
            
             events.checkNodes(nodes);
-            events.checkCircuitElements(circuitElements, inputMode, inputCircuitElement);
+            events.checkCircuitElements(circuitElements);
             events.checkGridNodes(nodes, hoverdCircle);
 
             currentElement.update(currentDrawState);
         }
-        else {
-            int key = GetCharPressed();
-
-            while (key > 0)
-            {
-                if ((key >= 48) && (key <= 57) || key == 46)
-                {
-                    input += static_cast<char>(key);
-                }
-
-                key = GetCharPressed(); 
-            }
-
-            if (IsKeyPressed(KEY_BACKSPACE))
-            {
-                if (input.size() > 0) {
-                    input.pop_back();
-                }
-            }
-
-            if (inputCircuitElement && input != "")
-                inputCircuitElement->value = std::stof(input);
-            else if (inputCircuitElement && input == "")
-                inputCircuitElement->value = 0.0f;
-
-            if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER)) {
-                inputMode = false;
-                input = "";
-                inputCircuitElement = nullptr;
-            }
-        }
+        else
+            input.handle();
         
-
         BeginDrawing();
         ClearBackground(WHITE);
 
@@ -130,16 +92,15 @@ int main(void)
             node.draw();
 
         statusText.draw();
+        input.draw();
 
         EndDrawing();
     }
 
-    for (auto& texture : textures) {
+    for (auto& texture : textures) 
         UnloadTexture(texture);
-    }
 
     CloseWindow();
-    return 0;
 }
 
 // TODO
@@ -150,11 +111,6 @@ int main(void)
 // ctrl-z, delete
 // multiple circuits one canvas
 // camera that allows  to zoom in and out
-// display value as  m micro nano, kilo, mega
-// allow input of units
-// the initial display of an element's value is the original value but when the user starts typing it begins from zero
-// handle (.) in input better
-// when editing value seperate input from display
 // make blinking animation when editing a circuits element 
 // make insert mode which allows the insertion of the value of all the circuit elements
 // add a direction indecator for resistors and voltage sources indicating which direction the current is flowing

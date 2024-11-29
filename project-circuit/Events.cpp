@@ -1,4 +1,6 @@
 #include "Events.h"
+#include "CircuitCalculations.h"
+#include "raylib.h"
 
 void Events::checkNodes(std::list<NodeObject>& nodes) {
     if (m_hoverTriggerd)
@@ -10,7 +12,7 @@ void Events::checkNodes(std::list<NodeObject>& nodes) {
 
             if (node.solved) {
                 m_statusText.clearText();
-                m_statusText.addText("V = " + toString(node.value) + "V");
+                m_statusText.addText("V = " + getDisplayText(node.value, DrawState::VOLTAGE_SOURCE));
             }
 
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -23,26 +25,25 @@ void Events::checkNodes(std::list<NodeObject>& nodes) {
 
 }
 
-void Events::checkCircuitElements(std::list<CircuitElement>& circuitElements, bool& inputMode, CircuitElement*& inputCircuitElement) {
+void Events::checkCircuitElements(std::list<CircuitElement>& circuitElements) {
     if (m_hoverTriggerd)
         return;
 
-    for (auto& circuitElement : circuitElements) {
-      
+    for (auto it = circuitElements.begin(); it != circuitElements.end(); it++) {
+        auto& circuitElement = *it;
         if (CheckCollisionPointLine(GetMousePosition(), circuitElement.startNode->pos, circuitElement.endNode->pos, UI::circuitElementHeight)) {
             m_hoverTriggerd = true;
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                inputMode = true;
-                inputCircuitElement = &circuitElement;
+                m_input.assign(it);
                 break;
             }
 
             if (circuitElement.startNode->solved && circuitElement.endNode->solved) {
                 m_statusText.clearText();
-                m_statusText.addText("\xCE\x94V=" + toString(calculateVoltageDiff(circuitElement)) + "V");
+                m_statusText.addText("\xCE\x94V=" + getDisplayText(calculateVoltageDiff(circuitElement), DrawState::VOLTAGE_SOURCE));
 
                 if (circuitElement.state != DrawState::WIRE) {
-                    m_statusText.addText(", I= " + toString(circuitElement.current) + "A");
+                    m_statusText.addText(", I= " + getDisplayText(circuitElement.current, DrawState::CURRENT_SOURCE));
                 }
             }
 

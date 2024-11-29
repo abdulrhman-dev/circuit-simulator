@@ -1,4 +1,5 @@
 #include "Output.h"
+#include "TextHelper.h"
 
 void CircuitElement::draw(Font font, TexturesArray& textures) {
     if (state == DrawState::WIRE) {
@@ -28,7 +29,7 @@ void CircuitElement::drawElementText(Font font, Vector2 endPos ) {
     if (RenderInfo.ElementLength < UI::cellSize / 2.0f)
         return;
 
-    std::string text{ toString(value) + getUnit(state) };
+    std::string text{ getDisplayText(value, state)};
 
     bool isInLeftSide = (RenderInfo.rotation >= 0 && RenderInfo.rotation <= 90) || (RenderInfo.rotation <= 360 && RenderInfo.rotation >= 270);
 

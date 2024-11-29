@@ -53,6 +53,12 @@
     <ClCompile Include="Events.h">
       <Filter>GUI\Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="TextHelper.cpp">
+      <Filter>GUI\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>GUI\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MatrixSolve.h">

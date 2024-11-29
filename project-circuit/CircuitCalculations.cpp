@@ -1,5 +1,8 @@
 #include "CircuitCalculations.h"
 #include "Circuit.h"
+#include "Output.h"
+#include "Graph.h"
+#include <memory>
 #include <iostream>
 
 float calculateVoltageDiff(const CircuitElement& circuitElement) {

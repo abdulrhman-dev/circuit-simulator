@@ -7,7 +7,6 @@
 
 #include "UIConstants.h"
 #include "CircuitStamp.h"
-#include "TextHelper.h"
 #include "Graph.h"
 
 

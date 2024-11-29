@@ -3,64 +3,37 @@
 #include "Output.h"
 #include "raylib.h"
 #include "string"
+#include "UIConstants.h"
+#include "TextHelper.h"
+#include "optional"
+
 class Input {
 private:
+	using CircuitElementIterator = std::list<CircuitElement>::iterator;
+
 	CircuitElement* inputCircuitElement{ nullptr };
-	std::string input{};
+	CircuitElementIterator inputElementIterator{};
+	std::list<CircuitElement>& m_circuitElements;
+	std::string value{};
 	bool inputMode{ false };
 	bool periodExists{ false };
+	std::optional<MetricPrefix> prefix;
+	Font m_font;
 public:
-	void assign(CircuitElement* input) {
-		if (input) {
-			inputMode = true;
-			inputCircuitElement = input;
-		}
-	}
+	Input(const Font& font, std::list<CircuitElement>& circuitElements)
+		: m_font(font)
+		, m_circuitElements(circuitElements)
+	{}
 
-	void reset() {
-		input = "";
-		inputCircuitElement = nullptr;
-		inputMode = false;
-		periodExists = false;
-	}
+	void assign(CircuitElementIterator circuitElement);
 
-	void handle() {
-		if (!inputCircuitElement)
-			return;
+	void reset();
 
-		int key = GetCharPressed();
+	int isInputMode() const { return inputMode; }
 
-		while (key > 0)
-		{
-			if ((key >= 48) && (key <= 57) || (key == 46 && !periodExists))
-			{
-				if (key == 46) periodExists = true;
+	void handle();
 
-				input += static_cast<char>(key);
-			}
-
-			key = GetCharPressed();
-		}
-
-		if (IsKeyPressed(KEY_BACKSPACE) && input.size() > 0)
-		{
-			if (input.back() == '.') periodExists = false;
-
-			input.pop_back();
-		}
-
-		if (inputCircuitElement && input != "")
-			inputCircuitElement->value = std::stof(input);
-		else if (inputCircuitElement && input == "")
-			inputCircuitElement->value = 0.0f;
-
-		if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER))
-			reset();
-	}
+	void draw();
 };
-
-// m (1e-3,1000e-3)
-// mirco 1e-6,1000e-6)
-// nano 1e-
 
 #endif

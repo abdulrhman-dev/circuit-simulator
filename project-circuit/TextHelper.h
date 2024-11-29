@@ -1,27 +1,26 @@
 #ifndef TEXT_HELPER_H
 #define TEXT_HELPER_H
-#include "Output.h"
+#include <map>
+#include <utility>
 #include <sstream>
-namespace {
-    inline std::string toString(float value) {
-        std::stringstream ss;
-        ss << value;
-        return ss.str();
-    }
+#include "UIConstants.h"
 
-    inline std::string getUnit(DrawState drawState) {
-        switch (drawState)
-        {
-        case DrawState::RESISTOR:
-            return "\xCE\xA9";
-        case DrawState::VOLTAGE_SOURCE:
-            return "V";
-        case DrawState::CURRENT_SOURCE:
-            return "A";
-        default:
-            return "";
-        }
-    }
-}
+using MetricPrefix = std::pair<char, float>;
+
+inline std::map<char, float> metricPrefixes{
+	{'k', 1e3f},
+	{'m', 1e-3f},
+	{'T', 1e12f},
+	{'G', 1e9f}, 
+	{'M', 1e6f}, 
+	{'u', 1e-6f},
+	{'n', 1e-9f},
+	{'p', 1e-12f},
+};
+
+std::string toString(float value);
+std::string getUnit(DrawState drawState);
+std::string getDisplayText(float value, DrawState state);
+
 #endif
 
