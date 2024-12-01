@@ -61,6 +61,7 @@ public:
         : m_circuitElements(circuitElements)
     {}
 
+    int isDrawing() const { return drawingElement; }
     void addNode(NodeObject& node, DrawState currDrawState);
     void update(DrawState currState);
     void reCalculateRenderInfo(Vector2 endPos);

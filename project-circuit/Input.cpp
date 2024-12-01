@@ -68,12 +68,35 @@ void Input::handle() {
 			return;
 
 		auto prevElement = std::prev(inputElementIterator);
+
+		while (
+			prevElement->state == DrawState::WIRE
+			)
+		{
+			if (prevElement == m_circuitElements.begin()) return;
+
+			prevElement = std::prev(prevElement);
+		}
+
 		assign(prevElement);
 	}
 
 	if (!IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_TAB)) {
 		reset();
+
 		auto nextElement = std::next(inputElementIterator);
+
+
+		if (nextElement == m_circuitElements.end())
+			return;
+
+
+		while (nextElement->state == DrawState::WIRE)
+		{
+			nextElement = std::next(nextElement);
+
+			if (nextElement == m_circuitElements.end()) return;
+		}
 
 		if (nextElement != m_circuitElements.end()) {
 			assign(nextElement);

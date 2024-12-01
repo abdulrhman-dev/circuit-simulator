@@ -104,7 +104,8 @@ int main(void)
 }
 
 // TODO
-// refactor
+// skip wire while in input mode
+// don't allow the connection of an element on already created two nodes 
 // fix when the start and end are the same
 // put a more high res version of the images
 // flip the voltage source direction
@@ -115,9 +116,9 @@ int main(void)
 // make insert mode which allows the insertion of the value of all the circuit elements
 // add a direction indecator for resistors and voltage sources indicating which direction the current is flowing
 // multiple grounds
-// hide text mode
-// - show the value when hovering
-// - when editing the circuit element value 
 // add CircuitElement in a more effecient way
 // add a way to export the solution as an excel file
 // add a way to label nodes
+// hide text mode
+// - show the value when hovering
+// - when editing the circuit element value 
