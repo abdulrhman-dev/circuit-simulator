@@ -13,7 +13,9 @@ private:
 
 	CircuitElement* inputCircuitElement{ nullptr };
 	CircuitElementIterator inputElementIterator{};
+
 	std::list<CircuitElement>& m_circuitElements;
+
 	std::string value{};
 	bool inputMode{ false };
 	bool periodExists{ false };
@@ -34,6 +36,8 @@ public:
 	void handle();
 
 	void draw();
+
+	void handleCycle();
 };
 
 #endif

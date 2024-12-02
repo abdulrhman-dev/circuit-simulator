@@ -21,6 +21,8 @@ void Input::handle() {
 	if (!inputCircuitElement)
 		return;
 
+	inputCircuitElement->setOpacity(0.6f);
+
 	int key = GetCharPressed();
 
 	while (key > 0)
@@ -60,7 +62,14 @@ void Input::handle() {
 			inputCircuitElement->value = 0.0f;
 	}
 
-	// TODO: skip wires
+	handleCycle();
+
+	if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER))
+		reset();
+}
+
+void Input::handleCycle() {
+
 	if (IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_TAB)) {
 		reset();
 
@@ -103,9 +112,6 @@ void Input::handle() {
 		}
 	}
 
-
-	if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER))
-		reset();
 }
 
 void Input::draw() {

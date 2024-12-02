@@ -37,9 +37,17 @@ void CurrentCircuitElement::reCalculateRenderInfo(Vector2 endPos) {
     }
 }
 
+
 void CurrentCircuitElement::addNode(NodeObject& node, DrawState currDrawState) {
     if (drawingElement) {
         endNode = &node;
+
+       if (startNode->graphNode.value == endNode->graphNode.value)
+            return;
+
+        if (startNode->isNeighbor(*endNode))
+            return;
+
         state = currDrawState;
         endNode->addEdge(startNode, currDrawState);
         startNode->addEdge(endNode, currDrawState);

@@ -19,18 +19,21 @@ int main(void)
 {
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT);
 
-    InitWindow(UI::width, UI::height, "Circuit Simulator");
+    InitWindow(UI::width, UI::height, "Circuit Solver");
 
     SetTargetFPS(60);
 
-    Font font = LoadFont("./dejavu.fnt");
+    Font font = LoadFont("./assets/dejavu.fnt");
     SetTextureFilter(font.texture, TEXTURE_FILTER_TRILINEAR);
 
     TexturesArray textures{ 
-        LoadTexture("./Resistor.png"),
-        LoadTexture("./Voltage Source.png"),
-        LoadTexture("./Current Source.png") 
+        LoadTexture("./assets/Resistor.png"),
+        LoadTexture("./assets/Voltage Source.png"),
+        LoadTexture("./assets/Current Source.png")
     };
+
+    for (auto& texture : textures)
+        SetTextureFilter(texture, TEXTURE_FILTER_POINT);
 
     // WIRE  doesn't have a texture and it, in this case, represents the count of elements
     assert(textures.size() == static_cast<std::size_t>(DrawState::WIRE));
@@ -104,16 +107,9 @@ int main(void)
 }
 
 // TODO
-// skip wire while in input mode
-// don't allow the connection of an element on already created two nodes 
-// fix when the start and end are the same
-// put a more high res version of the images
-// flip the voltage source direction
 // ctrl-z, delete
 // multiple circuits one canvas
 // camera that allows  to zoom in and out
-// make blinking animation when editing a circuits element 
-// make insert mode which allows the insertion of the value of all the circuit elements
 // add a direction indecator for resistors and voltage sources indicating which direction the current is flowing
 // multiple grounds
 // add CircuitElement in a more effecient way

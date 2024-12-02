@@ -12,10 +12,29 @@
 
 struct NodeObject
 {
+private:
+    static inline int nodeCounter{ 0 };
+public:
     Vector2 pos{};
     Graph::Node graphNode{};
     bool solved{ false };
     float value{};
+
+    NodeObject(Vector2 pos_, Graph::Node& graphNode_, bool solved_ = false, float value_ = 0)
+        : pos(pos_)
+        , graphNode(graphNode_)
+        , solved(solved_)
+        , value(value_)
+    {
+        graphNode.value = nodeCounter++;
+    }
+
+    NodeObject(Vector2 pos_)
+        : pos(pos_)
+    {
+        graphNode.value = nodeCounter++;
+    }
+
 
     void addEdge(NodeObject* node, DrawState& state) {
         graphNode.edges.push_back(Graph::Edge{ node->graphNode, state == DrawState::WIRE ? true : false });
@@ -23,6 +42,15 @@ struct NodeObject
 
     void draw() const {
         DrawCircleV(pos, 5, UI::WIRE_COLOR);
+    }
+
+    bool isNeighbor(NodeObject& checkNode) {
+        for (auto& graphNode : graphNode.edges) {
+            if (checkNode.graphNode.value == graphNode.node.value)
+                return true;
+        }
+
+        return false;
     }
 };
 
@@ -34,6 +62,7 @@ struct CircuitElementRenderInfo {
     float lineLength  { 0 };
     float rotation  { 0 };
     bool drawExtentions  { false };
+    float opacity{ 1.0f };
 };
 
 class CircuitElement {
@@ -47,6 +76,7 @@ public:
     void draw(Font font, TexturesArray& textures);
     void drawElement(Vector2 endPos, Font font, TexturesArray& textures);
     void drawElementText(Font font, Vector2 endPos);
+    void setOpacity(float value) { RenderInfo.opacity = value;  }
 protected:
     CircuitElementRenderInfo RenderInfo{};
 };

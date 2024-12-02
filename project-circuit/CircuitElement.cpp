@@ -17,12 +17,14 @@ void CircuitElement::drawElement(Vector2 endPos, Font font, TexturesArray& textu
       
     drawElementText(font, endPos);
 
-    DrawTexturePro(currentTexture, sourceTexture, RenderInfo.destTextureRec, RenderInfo.origin, RenderInfo.rotation, WHITE);
+    DrawTexturePro(currentTexture, sourceTexture, RenderInfo.destTextureRec, RenderInfo.origin, RenderInfo.rotation, Fade(WHITE, RenderInfo.opacity));
 
     if (RenderInfo.drawExtentions) {
-        DrawLineEx({ RenderInfo.destTextureRec.x, RenderInfo.destTextureRec.y }, Vector2Add({ RenderInfo.destTextureRec.x, RenderInfo.destTextureRec.y }, Vector2Scale(Vector2Normalize(RenderInfo.ElementVector), RenderInfo.lineLength)), 2.0f, UI::WIRE_COLOR);
-        DrawLineEx(Vector2Subtract(endPos, Vector2Scale(Vector2Normalize(RenderInfo.ElementVector), RenderInfo.lineLength)), endPos, 2.0f, UI::WIRE_COLOR);
+        DrawLineEx({ RenderInfo.destTextureRec.x, RenderInfo.destTextureRec.y }, Vector2Add({ RenderInfo.destTextureRec.x, RenderInfo.destTextureRec.y }, Vector2Scale(Vector2Normalize(RenderInfo.ElementVector), RenderInfo.lineLength)), 2.0f, Fade(UI::WIRE_COLOR, RenderInfo.opacity));
+        DrawLineEx(Vector2Subtract(endPos, Vector2Scale(Vector2Normalize(RenderInfo.ElementVector), RenderInfo.lineLength)), endPos, 2.0f, Fade(UI::WIRE_COLOR, RenderInfo.opacity));
     }
+
+    RenderInfo.opacity = 1.0f;
 }
 
 void CircuitElement::drawElementText(Font font, Vector2 endPos ) {

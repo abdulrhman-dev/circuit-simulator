@@ -38,14 +38,13 @@ std::string getDisplayText(float value, DrawState state) {
     auto chosenPrefix{getPrefix(value)};
 
     if (chosenPrefix.has_value()) {
-        value = std::round((value * 10.0f) / chosenPrefix.value().second) / 10.0f;
+        value = value/ chosenPrefix.value().second;
         if (chosenPrefix.value().first == 'u')
             text += "\xCE\xBC";
         else
             text += chosenPrefix.value().first;
     }
-
-    text.insert(0, toString(value));
+    text.insert(0, toString(std::round((value * 100.0f)) / 100.0f));
     text += getUnit(state);
 
     return text;

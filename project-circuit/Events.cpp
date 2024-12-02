@@ -33,6 +33,7 @@ void Events::checkCircuitElements(std::list<CircuitElement>& circuitElements) {
         auto& circuitElement = *it;
         if (CheckCollisionPointLine(GetMousePosition(), circuitElement.startNode->pos, circuitElement.endNode->pos, UI::circuitElementHeight)) {
             m_hoverTriggerd = true;
+            circuitElement.setOpacity(0.6f);
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && circuitElement.state != DrawState::WIRE && !m_currentElement.isDrawing()) {
                 m_input.assign(it);
                 break;

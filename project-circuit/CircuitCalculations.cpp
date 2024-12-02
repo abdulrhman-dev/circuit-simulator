@@ -41,7 +41,7 @@ bool SolveCircuit(std::list<NodeObject>& nodes, std::list<CircuitElement>& circu
             circuit.addElement(std::make_unique<Resistor>(nodei, nodej, circuitElement.value));
             break;
         case DrawState::VOLTAGE_SOURCE:
-            circuit.addElement(std::make_unique<VoltageSource>(nodei, nodej, circuitElement.value));
+            circuit.addElement(std::make_unique<VoltageSource>(nodej, nodei, circuitElement.value));
             break;
         case DrawState::CURRENT_SOURCE:
             circuit.addElement(std::make_unique<CurrentSource>(nodei, nodej, circuitElement.value));
