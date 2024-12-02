@@ -5,7 +5,7 @@ namespace Graph {
     struct Node;
 
     struct Edge {
-        Node& node;
+        Node* node;
         bool traverse{};
     };
 
@@ -13,6 +13,7 @@ namespace Graph {
         int value{};
         std::vector<Edge> edges;
         bool visited{};
+        int id{};
     };
 
 

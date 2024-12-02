@@ -9,7 +9,7 @@ namespace Graph {
 
         for (auto& edge : node.edges) {
             if (edge.traverse)
-                dfs(edge.node, value);
+                dfs(*(edge.node), value);
         }
     }
 }

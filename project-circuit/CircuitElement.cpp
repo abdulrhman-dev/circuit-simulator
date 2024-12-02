@@ -3,7 +3,8 @@
 
 void CircuitElement::draw(Font font, TexturesArray& textures) {
     if (state == DrawState::WIRE) {
-        DrawLineEx(startNode->pos, endNode->pos, 2.0f, UI::WIRE_COLOR);
+        DrawLineEx(startNode->pos, endNode->pos, 2.0f, Fade(UI::WIRE_COLOR, RenderInfo.opacity));
+        RenderInfo.opacity = 1.0f;
         return;
     }
 

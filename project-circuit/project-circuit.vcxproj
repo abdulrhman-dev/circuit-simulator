@@ -150,6 +150,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="CircuitElement.cpp" />
+    <ClCompile Include="StateHelper.cpp" />
     <ClCompile Include="TextHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +161,7 @@
     <ClInclude Include="Output.h" />
     <ClInclude Include="MatrixSolve.h" />
     <ClInclude Include="AugmentedMatrix.h" />
+    <ClInclude Include="StateHelper.h" />
     <ClInclude Include="TextHelper.h" />
     <ClInclude Include="UIConstants.h" />
   </ItemGroup>

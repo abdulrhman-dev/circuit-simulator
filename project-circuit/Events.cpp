@@ -1,5 +1,6 @@
 #include "Events.h"
 #include "CircuitCalculations.h"
+#include "StateHelper.h"
 #include "raylib.h"
 
 void Events::checkNodes(std::list<NodeObject>& nodes) {
@@ -25,7 +26,7 @@ void Events::checkNodes(std::list<NodeObject>& nodes) {
 
 }
 
-void Events::checkCircuitElements(std::list<CircuitElement>& circuitElements) {
+void Events::checkCircuitElements(std::list<CircuitElement>& circuitElements, std::list<NodeObject>& nodes) {
     if (m_hoverTriggerd)
         return;
 
@@ -34,6 +35,12 @@ void Events::checkCircuitElements(std::list<CircuitElement>& circuitElements) {
         if (CheckCollisionPointLine(GetMousePosition(), circuitElement.startNode->pos, circuitElement.endNode->pos, UI::circuitElementHeight)) {
             m_hoverTriggerd = true;
             circuitElement.setOpacity(0.6f);
+
+            if (IsKeyPressed(KEY_DELETE)) {
+                deleteElement(it, circuitElements, nodes);
+                break;
+            }
+
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && circuitElement.state != DrawState::WIRE && !m_currentElement.isDrawing()) {
                 m_input.assign(it);
                 break;
@@ -47,6 +54,7 @@ void Events::checkCircuitElements(std::list<CircuitElement>& circuitElements) {
                     m_statusText.addText(", I= " + getDisplayText(circuitElement.current, DrawState::CURRENT_SOURCE));
                 }
             }
+
 
             break;
         }

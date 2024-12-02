@@ -13,6 +13,7 @@
 #include "Events.h"
 #include "Input.h"
 #include "CircuitCalculations.h"
+#include "StateHelper.h"
 
 
 int main(void)
@@ -64,12 +65,14 @@ int main(void)
             else if (IsKeyPressed(KEY_C)) currentDrawState = DrawState::CURRENT_SOURCE;
             else if (IsKeyPressed(KEY_W)) currentDrawState = DrawState::WIRE;
             else if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_ENTER)) solved = SolveCircuit(nodes, circuitElements);
+            else if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_Z) && !currentElement.isDrawing() && !input.isInputMode() && circuitElements.size() > 0)
+                deleteElement(std::prev(circuitElements.end()), circuitElements, nodes);
            
             events.checkNodes(nodes);
-            events.checkCircuitElements(circuitElements);
+            events.checkCircuitElements(circuitElements, nodes);
             events.checkGridNodes(nodes, hoverdCircle);
 
-            currentElement.update(currentDrawState);
+            currentElement.update(currentDrawState, nodes);
         }
         else
             input.handle();
@@ -107,7 +110,6 @@ int main(void)
 }
 
 // TODO
-// ctrl-z, delete
 // multiple circuits one canvas
 // camera that allows  to zoom in and out
 // add a direction indecator for resistors and voltage sources indicating which direction the current is flowing

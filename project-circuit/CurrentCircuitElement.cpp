@@ -1,8 +1,17 @@
 #include "Output.h"
 
-void CurrentCircuitElement::update(DrawState currState) {
+void CurrentCircuitElement::update(DrawState currState, std::list<NodeObject>& nodes) {
     if (!drawingElement || !startNode)
         return;
+
+    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) || IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_Z)) {
+        reset();
+
+        if (nodes.back().graphNode.edges.size() == 0)
+            nodes.pop_back();
+
+        return;
+    }
 
     state = currState;
 
@@ -42,7 +51,7 @@ void CurrentCircuitElement::addNode(NodeObject& node, DrawState currDrawState) {
     if (drawingElement) {
         endNode = &node;
 
-       if (startNode->graphNode.value == endNode->graphNode.value)
+       if (startNode->graphNode.id == endNode->graphNode.id)
             return;
 
         if (startNode->isNeighbor(*endNode))
@@ -53,27 +62,25 @@ void CurrentCircuitElement::addNode(NodeObject& node, DrawState currDrawState) {
         startNode->addEdge(endNode, currDrawState);
         reCalculateRenderInfo(endNode->pos);
         m_circuitElements.push_back(*this);
-        reset();
-    }
-    else {
-        startNode = &node;
-    }
 
+        reset();
+        return;
+    }
+    
+    startNode = &node;
     drawingElement = !drawingElement;
 }
 
 void CurrentCircuitElement::reset() {
-    if (drawingElement)
-        return;
-
     startNode = nullptr;
     endNode = nullptr;
     value = 5.0f;
     current = 0.0f;
+    drawingElement = false;
 }
 
 void CurrentCircuitElement::draw(Font font, TexturesArray& textures) {
-    if (!drawingElement)
+    if (!drawingElement || !startNode)
         return;
 
     if (state == DrawState::WIRE) {

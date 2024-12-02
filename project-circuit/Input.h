@@ -6,10 +6,10 @@
 #include "UIConstants.h"
 #include "TextHelper.h"
 #include "optional"
+using CircuitElementIterator = std::list<CircuitElement>::iterator;
 
 class Input {
 private:
-	using CircuitElementIterator = std::list<CircuitElement>::iterator;
 
 	CircuitElement* inputCircuitElement{ nullptr };
 	CircuitElementIterator inputElementIterator{};

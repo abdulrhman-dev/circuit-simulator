@@ -13,7 +13,7 @@
 struct NodeObject
 {
 private:
-    static inline int nodeCounter{ 0 };
+    static inline int idCounter{ 0 };
 public:
     Vector2 pos{};
     Graph::Node graphNode{};
@@ -26,18 +26,18 @@ public:
         , solved(solved_)
         , value(value_)
     {
-        graphNode.value = nodeCounter++;
+        graphNode.id = idCounter++;
     }
 
     NodeObject(Vector2 pos_)
         : pos(pos_)
     {
-        graphNode.value = nodeCounter++;
+        graphNode.id = idCounter++;
     }
 
 
     void addEdge(NodeObject* node, DrawState& state) {
-        graphNode.edges.push_back(Graph::Edge{ node->graphNode, state == DrawState::WIRE ? true : false });
+        graphNode.edges.push_back(Graph::Edge{ &(node->graphNode), state == DrawState::WIRE ? true : false});
     }
 
     void draw() const {
@@ -46,7 +46,7 @@ public:
 
     bool isNeighbor(NodeObject& checkNode) {
         for (auto& graphNode : graphNode.edges) {
-            if (checkNode.graphNode.value == graphNode.node.value)
+            if (checkNode.graphNode.id == graphNode.node->id)
                 return true;
         }
 
@@ -93,7 +93,7 @@ public:
 
     int isDrawing() const { return drawingElement; }
     void addNode(NodeObject& node, DrawState currDrawState);
-    void update(DrawState currState);
+    void update(DrawState currState, std::list<NodeObject>& nodes);
     void reCalculateRenderInfo(Vector2 endPos);
     void draw(Font font, TexturesArray& textures);
     void reset();

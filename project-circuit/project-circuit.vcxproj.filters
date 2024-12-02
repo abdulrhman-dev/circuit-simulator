@@ -59,6 +59,9 @@
     <ClCompile Include="Input.cpp">
       <Filter>GUI\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StateHelper.cpp">
+      <Filter>GUI\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MatrixSolve.h">
@@ -86,6 +89,9 @@
       <Filter>Solver\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
+      <Filter>GUI\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StateHelper.h">
       <Filter>GUI\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
