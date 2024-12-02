@@ -49,20 +49,19 @@ void deleteElement(const CircuitElementIterator& deletedELement, std::list<Circu
     deleteEdge(startNodeEdges, endNodeID);
     deleteEdge(endNodeEdges, startNodeID);
 
+    // these variables are stored before the iterator gets invalidated
+    bool cleanUpStartNodes = startNodeEdges.size() == 0;
+    bool cleanUpSEndNodes = endNodeEdges.size() == 0;
 
+    circuitElements.erase(deletedELement);
 
-    if (startNodeEdges.size() == 0) {
+    if (cleanUpStartNodes) {
         deleteGroundsConnected(circuitElements, startNodeID);
-
         deleteNode(nodes, startNodeID);
     }
 
-    if (endNodeEdges.size() == 0) {
+    if (cleanUpSEndNodes) {
         deleteGroundsConnected(circuitElements, endNodeID);
-
         deleteNode(nodes, endNodeID);
-
     }
-
-    circuitElements.erase(deletedELement);
 }

@@ -61,10 +61,23 @@ public:
 
     void setVoltageRow(int value) { m_voltageRow = value; }
 
+protected:
+    VoltageSource(int nodeI, int nodeJ, Number value, CircuitType type)
+        : CircuitStamp(nodeI, nodeJ, value, type)
+    {}
+
 private:
     int m_voltageRow{};
 };
 
+
+class ShortCircuit : public VoltageSource {
+public:
+    ShortCircuit(int nodeI, int nodeJ)
+        : VoltageSource(nodeI, nodeJ, 0, shortCircuit)
+    {}
+
+};
 
 int getRealNode(int node, int ground);
 #endif // !CIRCUIT_STAMP_H
