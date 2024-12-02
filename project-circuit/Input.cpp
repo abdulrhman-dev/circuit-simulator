@@ -79,7 +79,7 @@ void Input::handleCycle() {
 		auto prevElement = std::prev(inputElementIterator);
 
 		while (
-			prevElement->state == DrawState::WIRE
+			prevElement->state == DrawState::WIRE || prevElement->state == DrawState::GROUND
 			)
 		{
 			if (prevElement == m_circuitElements.begin()) return;
@@ -100,7 +100,7 @@ void Input::handleCycle() {
 			return;
 
 
-		while (nextElement->state == DrawState::WIRE)
+		while (nextElement->state == DrawState::WIRE || nextElement->state == DrawState::GROUND)
 		{
 			nextElement = std::next(nextElement);
 

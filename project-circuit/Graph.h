@@ -13,7 +13,7 @@ namespace Graph {
         int value{};
         std::vector<Edge> edges;
         bool visited{};
-        int id{};
+        int id{0};
     };
 
 

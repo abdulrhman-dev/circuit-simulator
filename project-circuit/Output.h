@@ -75,8 +75,14 @@ public:
 
     void draw(Font font, TexturesArray& textures);
     void drawElement(Vector2 endPos, Font font, TexturesArray& textures);
+    void drawGround(Vector2 endPos, Font font, TexturesArray& textures);
     void drawElementText(Font font, Vector2 endPos);
     void setOpacity(float value) { RenderInfo.opacity = value;  }
+
+    ~CircuitElement() {
+        if(state == DrawState::GROUND && !endNode)
+            delete endNode;
+    }
 protected:
     CircuitElementRenderInfo RenderInfo{};
 };
@@ -93,6 +99,7 @@ public:
 
     int isDrawing() const { return drawingElement; }
     void addNode(NodeObject& node, DrawState currDrawState);
+    void addNode(Vector2 pos, DrawState currDrawState);
     void update(DrawState currState, std::list<NodeObject>& nodes);
     void reCalculateRenderInfo(Vector2 endPos);
     void draw(Font font, TexturesArray& textures);

@@ -1,4 +1,5 @@
 #include "StateHelper.h"
+#include <iostream>
 
 void deleteNode(std::list<NodeObject>& nodes, int nodeGraphID) {
     auto deleteElement = std::find_if(nodes.begin(), nodes.end(), [nodeGraphID](const NodeObject& node) {
@@ -18,9 +19,25 @@ void deleteEdge(std::vector<Graph::Edge>& edges, int nodeGraphID) {
         edges.erase(deleteElement);
 }
 
+void deleteGroundsConnected(std::list<CircuitElement>& circuitElements, int nodeGraphID) {
+    circuitElements.resize(std::distance(
+        circuitElements.begin(),
+        std::remove_if(circuitElements.begin(), circuitElements.end(), [nodeGraphID](const CircuitElement& circuitElement) 
+            {
+                return circuitElement.startNode->graphNode.id == nodeGraphID && circuitElement.state == DrawState::GROUND;
+            }
+        )
+    ));
+}
+
 void deleteElement(const CircuitElementIterator& deletedELement, std::list<CircuitElement>& circuitElements, std::list<NodeObject>& nodes) {
     if (circuitElements.size() < 1)
         return;
+
+    if (deletedELement->state == DrawState::GROUND) {
+        circuitElements.erase(deletedELement);
+        return;
+    }
 
     auto& startNodeEdges = (*deletedELement).startNode->graphNode.edges;
     auto& endNodeEdges = (*deletedELement).endNode->graphNode.edges;
@@ -33,11 +50,19 @@ void deleteElement(const CircuitElementIterator& deletedELement, std::list<Circu
     deleteEdge(endNodeEdges, startNodeID);
 
 
-    if (startNodeEdges.size() == 0)
-        deleteNode(nodes, startNodeID);
 
-    if (endNodeEdges.size() == 0)
+    if (startNodeEdges.size() == 0) {
+        deleteGroundsConnected(circuitElements, startNodeID);
+
+        deleteNode(nodes, startNodeID);
+    }
+
+    if (endNodeEdges.size() == 0) {
+        deleteGroundsConnected(circuitElements, endNodeID);
+
         deleteNode(nodes, endNodeID);
+
+    }
 
     circuitElements.erase(deletedELement);
 }

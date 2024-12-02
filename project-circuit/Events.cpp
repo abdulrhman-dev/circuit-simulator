@@ -16,13 +16,16 @@ void Events::checkNodes(std::list<NodeObject>& nodes) {
                 m_statusText.addText("V = " + getDisplayText(node.value, DrawState::VOLTAGE_SOURCE));
             }
 
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && m_currentDrawState == DrawState::GROUND && m_currentElement.startNode) {
+                m_currentElement.addNode(node.pos, m_currentDrawState);
+            }else if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 m_currentElement.addNode(node, m_currentDrawState);
             }
 
             break;
         }
     }
+
 
 }
 
@@ -41,7 +44,9 @@ void Events::checkCircuitElements(std::list<CircuitElement>& circuitElements, st
                 break;
             }
 
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && circuitElement.state != DrawState::WIRE && !m_currentElement.isDrawing()) {
+            const bool invalidDrawStates = circuitElement.state != DrawState::WIRE && circuitElement.state != DrawState::GROUND;
+
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && invalidDrawStates && !m_currentElement.isDrawing()) {
                 m_input.assign(it);
                 break;
             }
@@ -71,9 +76,13 @@ void Events::checkGridNodes(std::list<NodeObject>& nodes, Vector2& hoverdCircle)
             Vector2 checkCircleCenter = Vector2{ UI::cellSize * i, UI::cellSize * j };
             if (CheckCollisionPointCircle(GetMousePosition(), checkCircleCenter, UI::cellSize / 3.0f)) {
                 if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                    nodes.push_back({ checkCircleCenter });
-
-                    m_currentElement.addNode(nodes.back(), m_currentDrawState);
+                    if (m_currentDrawState == DrawState::GROUND && m_currentElement.startNode) {
+                        m_currentElement.addNode(checkCircleCenter, m_currentDrawState);
+                    }
+                    else if(m_currentDrawState != DrawState::GROUND){
+                        nodes.push_back({ checkCircleCenter });
+                        m_currentElement.addNode(nodes.back(), m_currentDrawState);
+                    }
 
                     break;
                 }

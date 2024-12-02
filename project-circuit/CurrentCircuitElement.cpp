@@ -3,8 +3,9 @@
 void CurrentCircuitElement::update(DrawState currState, std::list<NodeObject>& nodes) {
     if (!drawingElement || !startNode)
         return;
+    bool groundWithNewStartNode = currState == DrawState::GROUND && startNode->graphNode.edges.size() == 0;
 
-    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) || IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_Z)) {
+    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) || IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_Z) || groundWithNewStartNode) {
         reset();
 
         if (nodes.back().graphNode.edges.size() == 0)
@@ -25,7 +26,11 @@ void CurrentCircuitElement::reCalculateRenderInfo(Vector2 endPos) {
     RenderInfo.ElementVector = Vector2Subtract(endPos, Vector2{ startNode->pos.x, startNode->pos.y });
     RenderInfo.ElementLength = Vector2Length(RenderInfo.ElementVector);
 
-    RenderInfo.lineLength = (Vector2Length(RenderInfo.ElementVector) - RenderInfo.destTextureRec.width) / 2.0f;
+    if(state != DrawState::GROUND)
+        RenderInfo.lineLength = (RenderInfo.ElementLength - RenderInfo.destTextureRec.width) / 2.0f;
+    else
+        RenderInfo.lineLength = (RenderInfo.ElementLength - RenderInfo.destTextureRec.width);
+
 
     RenderInfo.rotation = 180.0f - (Vector2Angle(Vector2Subtract(Vector2{ startNode->pos.x, startNode->pos.y }, endPos), Vector2{ 1,0 }) * 180.0f / PI);
 
@@ -45,6 +50,8 @@ void CurrentCircuitElement::reCalculateRenderInfo(Vector2 endPos) {
         RenderInfo.origin = { 0,  RenderInfo.destTextureRec.height / 2.0f };
     }
 }
+
+
 
 
 void CurrentCircuitElement::addNode(NodeObject& node, DrawState currDrawState) {
@@ -69,6 +76,20 @@ void CurrentCircuitElement::addNode(NodeObject& node, DrawState currDrawState) {
     
     startNode = &node;
     drawingElement = !drawingElement;
+}
+
+void CurrentCircuitElement::addNode(Vector2 pos, DrawState currDrawState) {
+    if (currDrawState != DrawState::GROUND)
+        return;
+
+    if (drawingElement) {
+        endNode = new NodeObject(pos);
+        reCalculateRenderInfo(endNode->pos);
+        m_circuitElements.push_back(*this);
+
+        reset();
+        return;
+    }
 }
 
 void CurrentCircuitElement::reset() {

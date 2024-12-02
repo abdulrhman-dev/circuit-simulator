@@ -17,6 +17,7 @@ enum class DrawState{
     RESISTOR,
     VOLTAGE_SOURCE,
     CURRENT_SOURCE,
+    GROUND,
     WIRE
 };
 

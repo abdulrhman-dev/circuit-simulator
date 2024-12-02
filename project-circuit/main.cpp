@@ -30,7 +30,8 @@ int main(void)
     TexturesArray textures{ 
         LoadTexture("./assets/Resistor.png"),
         LoadTexture("./assets/Voltage Source.png"),
-        LoadTexture("./assets/Current Source.png")
+        LoadTexture("./assets/Current Source.png"),
+        LoadTexture("./assets/Ground.png")
     };
 
     for (auto& texture : textures)
@@ -64,6 +65,7 @@ int main(void)
             else if (IsKeyPressed(KEY_V)) currentDrawState = DrawState::VOLTAGE_SOURCE;
             else if (IsKeyPressed(KEY_C)) currentDrawState = DrawState::CURRENT_SOURCE;
             else if (IsKeyPressed(KEY_W)) currentDrawState = DrawState::WIRE;
+            else if (IsKeyPressed(KEY_G)) currentDrawState = DrawState::GROUND;
             else if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_ENTER)) solved = SolveCircuit(nodes, circuitElements);
             else if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_Z) && !currentElement.isDrawing() && !input.isInputMode() && circuitElements.size() > 0)
                 deleteElement(std::prev(circuitElements.end()), circuitElements, nodes);
@@ -114,6 +116,7 @@ int main(void)
 // camera that allows  to zoom in and out
 // add a direction indecator for resistors and voltage sources indicating which direction the current is flowing
 // multiple grounds
+// 
 // add CircuitElement in a more effecient way
 // add a way to export the solution as an excel file
 // add a way to label nodes
