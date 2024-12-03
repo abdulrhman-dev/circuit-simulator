@@ -66,6 +66,7 @@ int main(void)
             else if (IsKeyPressed(KEY_C)) currentDrawState = DrawState::CURRENT_SOURCE;
             else if (IsKeyPressed(KEY_W)) currentDrawState = DrawState::WIRE;
             else if (IsKeyPressed(KEY_G)) currentDrawState = DrawState::GROUND;
+            else if (IsKeyPressed(KEY_TAB) && circuitElements.size() >= 1) input.assign(circuitElements.begin());
             else if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_ENTER)) solved = SolveCircuit(nodes, circuitElements);
             else if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_Z) && !currentElement.isDrawing() && !input.isInputMode() && circuitElements.size() > 0)
                 deleteElement(std::prev(circuitElements.end()), circuitElements, nodes);
