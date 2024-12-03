@@ -3,6 +3,7 @@
 void CurrentCircuitElement::update(DrawState currState, std::list<NodeObject>& nodes) {
     if (!drawingElement || !startNode)
         return;
+
     bool groundWithNewStartNode = currState == DrawState::GROUND && startNode->graphNode.edges.size() == 0;
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) || IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_Z) || groundWithNewStartNode) {
@@ -84,6 +85,7 @@ void CurrentCircuitElement::addNode(Vector2 pos, DrawState currDrawState) {
 
     if (drawingElement) {
         endNode = new NodeObject(pos);
+        startNode->isGround = true;
         reCalculateRenderInfo(endNode->pos);
         m_circuitElements.push_back(*this);
 

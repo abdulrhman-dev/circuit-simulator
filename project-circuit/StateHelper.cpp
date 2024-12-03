@@ -30,12 +30,27 @@ void deleteGroundsConnected(std::list<CircuitElement>& circuitElements, int node
     ));
 }
 
+void deleteGround(const CircuitElementIterator& deletedElement, std::list<CircuitElement>& circuitElements) {
+    NodeObject* groundNode = (*deletedElement).startNode;
+    circuitElements.erase(deletedElement);
+
+    auto found = std::find_if(circuitElements.begin(), circuitElements.end(),
+        [groundNodeID = groundNode->graphNode.id](const CircuitElement& circuitElement) {
+            return circuitElement.startNode->graphNode.id == groundNodeID && circuitElement.state == DrawState::GROUND;
+        }
+    );
+
+    if (found == circuitElements.end()) {
+        groundNode->isGround = false;
+    }
+}
+
 void deleteElement(const CircuitElementIterator& deletedELement, std::list<CircuitElement>& circuitElements, std::list<NodeObject>& nodes) {
     if (circuitElements.size() < 1)
         return;
 
     if (deletedELement->state == DrawState::GROUND) {
-        circuitElements.erase(deletedELement);
+        deleteGround(deletedELement, circuitElements);
         return;
     }
 

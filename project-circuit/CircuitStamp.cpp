@@ -1,71 +1,65 @@
 #include "CircuitStamp.h"
 
-int getRealNode(int node, int ground) {
-    if (node <= ground)
-        return node;
+void Resistor::contribute(AugmentedMatrix<Number>& a) {
+    if (m_nodeI.isGround && m_nodeJ.isGround)
+        return; 
 
-    return node - 1;
-}
 
-void Resistor::contribute(AugmentedMatrix<Number>& a, int ground) {
-    if (m_nodeI != ground && m_nodeJ != ground) {
-        int workingNodeI = getRealNode(m_nodeI, ground);
-        int workingNodeJ = getRealNode(m_nodeJ, ground);
+    if (!m_nodeI.isGround && !m_nodeJ.isGround) {
 
-        a.get(workingNodeI, workingNodeI) += 1 / m_value;
-        a.get(workingNodeJ, workingNodeJ) += 1 / m_value;
-        a.get(workingNodeI, workingNodeJ) += -1 / m_value;
-        a.get(workingNodeJ, workingNodeI) += -1 / m_value;
+        a.get(m_nodeI.index, m_nodeI.index) += 1 / m_value;
+        a.get(m_nodeJ.index, m_nodeJ.index) += 1 / m_value;
+        a.get(m_nodeI.index, m_nodeJ.index) += -1 / m_value;
+        a.get(m_nodeJ.index, m_nodeI.index) += -1 / m_value;
 
         return;
     }
 
-    int workingNode = getRealNode(m_nodeI != ground ? m_nodeI : m_nodeJ, ground);
+    int workingNode = m_nodeI.isGround ? m_nodeJ.index : m_nodeI.index;
 
     a.get(workingNode, workingNode) += 1 / m_value;
 };
 
 
 
-void CurrentSource::contribute(AugmentedMatrix<Number>& a, int ground) {
-    if (m_nodeI != ground && m_nodeJ != ground) {
-        int workingNodeI = getRealNode(m_nodeI, ground);
-        int workingNodeJ = getRealNode(m_nodeJ, ground);
+void CurrentSource::contribute(AugmentedMatrix<Number>& a) {
+    if (m_nodeI.isGround && m_nodeJ.isGround)
+        return;
 
-        a.get(workingNodeJ, a.columns() - 1) += m_value;
-        a.get(workingNodeI, a.columns() - 1) += -m_value;
+    if (!m_nodeI.isGround && !m_nodeJ.isGround) {
+        a.get(m_nodeJ.index, a.columns() - 1) += m_value;
+        a.get(m_nodeI.index, a.columns() - 1) += -m_value;
 
         return;
     }
 
 
-    int workingNode = getRealNode(m_nodeI != ground ? m_nodeI : m_nodeJ, ground);
+    int workingNode = m_nodeI.isGround ? m_nodeJ.index : m_nodeI.index;
 
-    a.get(workingNode, a.columns() - 1) += (m_nodeJ != ground ? 1 : -1) * m_value;
+    a.get(workingNode, a.columns() - 1) += (!m_nodeJ.isGround ? 1 : -1) * m_value;
 }
 
 
-void VoltageSource::contribute(AugmentedMatrix<Number>& a, int ground) {
+void VoltageSource::contribute(AugmentedMatrix<Number>& a) {
+    if (m_nodeI.isGround && m_nodeJ.isGround)
+        return;
+
     a.get(m_voltageRow, a.columns() - 1) = m_value;
 
-    if (m_nodeI != ground && m_nodeJ != ground) {
+    if (!m_nodeI.isGround && !m_nodeJ.isGround) {
 
-        int workingNodeI = getRealNode(m_nodeI, ground);
-        int workingNodeJ = getRealNode(m_nodeJ, ground);
+        a.get(m_voltageRow, m_nodeI.index) = 1;
+        a.get(m_voltageRow, m_nodeJ.index) = -1;
 
-        a.get(m_voltageRow, workingNodeI) = 1;
-        a.get(m_voltageRow, workingNodeJ) = -1;
-
-        a.get(workingNodeI, m_voltageRow) = 1;
-        a.get(workingNodeJ, m_voltageRow) = -1;
+        a.get(m_nodeI.index, m_voltageRow) = 1;
+        a.get(m_nodeJ.index, m_voltageRow) = -1;
 
         return;
     }
 
-    int workingNode = getRealNode(m_nodeI != ground ? m_nodeI : m_nodeJ, ground);
-    bool correctConenction = m_nodeJ == ground;
+    int workingNode = m_nodeI.isGround ? m_nodeJ.index : m_nodeI.index;
 
-    a.get(m_voltageRow, workingNode) = correctConenction ? 1 : -1;
-    a.get(workingNode, m_voltageRow) = correctConenction ? 1 : -1;
+    a.get(m_voltageRow, workingNode) = m_nodeJ.isGround ? 1 : -1;
+    a.get(workingNode, m_voltageRow) = m_nodeJ.isGround ? 1 : -1;
 }
 

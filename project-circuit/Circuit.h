@@ -21,7 +21,7 @@ public:
 
     void setGround(int value) { m_ground = value; }
     
-    int getUnkownsNumber() const { return static_cast<int>(nodes.size()) - 1; }
+    int getUnkownsNumber() const { return static_cast<int>(nodes.size()); }
 private:
     int m_ground{ 0 };
     int m_voltageSourcesCount{ 0 };

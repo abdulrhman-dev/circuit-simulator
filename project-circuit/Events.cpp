@@ -54,10 +54,7 @@ void Events::checkCircuitElements(std::list<CircuitElement>& circuitElements, st
             if (circuitElement.startNode->solved && circuitElement.endNode->solved) {
                 m_statusText.clearText();
                 m_statusText.addText("\xCE\x94V=" + getDisplayText(calculateVoltageDiff(circuitElement), DrawState::VOLTAGE_SOURCE));
-
-                if (circuitElement.state != DrawState::WIRE) {
-                    m_statusText.addText(", I= " + getDisplayText(circuitElement.current, DrawState::CURRENT_SOURCE));
-                }
+                m_statusText.addText(", I= " + getDisplayText(circuitElement.current, DrawState::CURRENT_SOURCE));
             }
 
 
