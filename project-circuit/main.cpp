@@ -9,15 +9,18 @@
 
 #include "Circuit.h"
 #include "Graph.h"
+
 #include "CircuitElement.h"
 #include "CurrentCircuitElement.h"
-#include "StatusText.h"
 #include "NodeObject.h"
+#include "StatusText.h"
+
 #include "Collision.h"
 #include "Input.h"
-#include "CircuitCalculations.h"
-#include "StateHelper.h"
 #include "Keyboard.h"
+
+#include "StateHelper.h"
+#include "CircuitCalculations.h"
 
 int main(void)
 {
@@ -52,7 +55,7 @@ int main(void)
     StatusText statusText(font);
     Input input(font, circuitElements);
 
-    Collision collision(currentElement,currentDrawState, statusText, input);
+    Collision collision(currentElement, currentDrawState, statusText, input);
 
     Vector2 hoverdCircle{ -1, -1 };
 

@@ -86,7 +86,7 @@ void CurrentCircuitElement::addNode(Vector2 pos, DrawState currDrawState) {
 
     if (drawingElement) {
         endNode = new NodeObject(pos);
-        startNode->isGround = true;
+        startNode->graphNode.isGround = true;
         reCalculateRenderInfo(endNode->pos);
         m_circuitElements.push_back(*this);
 

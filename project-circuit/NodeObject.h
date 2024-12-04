@@ -12,7 +12,6 @@ public:
     Graph::Node graphNode{};
     bool solved{ false };
     float value{};
-    bool isGround{ false };
 
     NodeObject(Vector2 pos_, Graph::Node& graphNode_, bool solved_ = false, float value_ = 0)
         : pos(pos_)
@@ -34,7 +33,7 @@ public:
     }
 
     void draw() const {
-        DrawCircleV(pos, 5, isGround ? RED : UI::WIRE_COLOR);
+        DrawCircleV(pos, 5,  graphNode.isGround ? RED : UI::WIRE_COLOR);
     }
 
     bool isNeighbor(NodeObject& checkNode) {

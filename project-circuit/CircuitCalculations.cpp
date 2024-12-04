@@ -20,30 +20,42 @@ float calculateVoltageDiff(const CircuitElement& circuitElement) {
 }
 
 bool SolveCircuit(std::list<NodeObject>& nodes, std::list<CircuitElement>& circuitElements) {
-    int nodeCounter{ 0 };
+    int* nodeCounter{};
     bool groundExists{ false };
+    
+    std::list<Graph::Node*> tempGrounds;
+
 
     for (auto& node : nodes) {
-        if (!node.isGround)
-            node.graphNode.value = nodeCounter++;
-        else
-            groundExists = true;
+        if (node.graphNode.visited)
+            continue;
+
+        Graph::Node* lastNode;
+
+        bool foundGround = false;
+
+        nodeCounter = Graph::dfs(node.graphNode, lastNode, foundGround);
+
+        if (!foundGround && lastNode) {
+            lastNode->isGround = true;
+            (*nodeCounter)--;
+            tempGrounds.push_back(lastNode);
+        }
     }
 
-    if (!groundExists)
-        (*std::prev(nodes.end())).isGround = true;
-
+    if (nodeCounter)
+        *nodeCounter = 0;
 
     Circuit circuit;
 
     for (auto& circuitElement : circuitElements) {
         CircuitNode nodei{ 
             circuitElement.startNode->graphNode.value, 
-            circuitElement.startNode->isGround
+            circuitElement.startNode->graphNode.isGround
         };
         CircuitNode nodej{ 
             circuitElement.endNode->graphNode.value, 
-            circuitElement.endNode->isGround
+            circuitElement.endNode->graphNode.isGround
         };
 
         switch (circuitElement.state)
@@ -73,9 +85,6 @@ bool SolveCircuit(std::list<NodeObject>& nodes, std::list<CircuitElement>& circu
         }
     }
 
-
-
-
     auto solution = circuit.solve();
     auto values = circuit.makeUnkownValuePair(solution);
 
@@ -97,7 +106,7 @@ bool SolveCircuit(std::list<NodeObject>& nodes, std::list<CircuitElement>& circu
         
         node.solved = true;
 
-        if (node.isGround) {
+        if (node.graphNode.isGround) {
             node.value = 0.0f;
             continue;
         }
@@ -106,8 +115,6 @@ bool SolveCircuit(std::list<NodeObject>& nodes, std::list<CircuitElement>& circu
             node.value = static_cast<float>(solution[node.graphNode.value]);
         }
     }
-
-
 
     int extractedVoltageCurrents = 0;
     int unkownNodes = circuit.getUnkownsNumber();
@@ -143,8 +150,9 @@ bool SolveCircuit(std::list<NodeObject>& nodes, std::list<CircuitElement>& circu
         }
     }
 
-    if (!groundExists)
-        (*std::prev(nodes.end())).isGround = false;
+    for (auto* tempGround : tempGrounds) {
+        tempGround->isGround = false;
+    }
 
     return solution.size() >= 1;
 }

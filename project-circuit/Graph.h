@@ -1,6 +1,7 @@
-#ifndef GRAPH_H
-#define GRAPH_H
-#include "vector"
+#pragma once
+#include <vector>
+#include <list>
+
 namespace Graph {
     struct Node;
 
@@ -13,10 +14,10 @@ namespace Graph {
         int value{-1};
         std::vector<Edge> edges;
         bool visited{};
+        bool isGround{};
         int id{0};
     };
 
 
-    void dfs(Node& node, int value);
+    int* dfs(Node& node, Node*& lastNode, bool& foundGround);
 }
-#endif // !GRAPH_H

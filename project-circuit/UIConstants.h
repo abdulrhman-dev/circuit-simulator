@@ -14,7 +14,7 @@ namespace UI {
     inline Color WIRE_COLOR{ 34,92,137,255 };
 }
 
-enum class DrawState{
+ enum class DrawState{
     RESISTOR,
     VOLTAGE_SOURCE,
     CURRENT_SOURCE,

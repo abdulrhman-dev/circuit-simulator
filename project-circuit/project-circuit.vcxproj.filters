@@ -35,9 +35,6 @@
     <ClCompile Include="main.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
-    <ClCompile Include="Graph.cpp">
-      <Filter>Solver\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CurrentCircuitElement.cpp">
       <Filter>GUI\Source Files</Filter>
     </ClCompile>
@@ -68,6 +65,9 @@
     <ClCompile Include="Keyboard.cpp">
       <Filter>GUI\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Graph.cpp">
+      <Filter>GUI\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MatrixSolve.h">
@@ -91,9 +91,6 @@
     <ClInclude Include="TextHelper.h">
       <Filter>GUI\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Graph.h">
-      <Filter>Solver\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>GUI\Header Files</Filter>
     </ClInclude>
@@ -107,6 +104,9 @@
       <Filter>GUI\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CurrentCircuitElement.h">
+      <Filter>GUI\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graph.h">
       <Filter>GUI\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

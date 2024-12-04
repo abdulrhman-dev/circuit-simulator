@@ -41,7 +41,7 @@ void deleteGround(const CircuitElementIterator& deletedElement, std::list<Circui
     );
 
     if (found == circuitElements.end()) {
-        groundNode->isGround = false;
+        groundNode->graphNode.isGround = false;
     }
 }
 

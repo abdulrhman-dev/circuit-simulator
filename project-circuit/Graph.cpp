@@ -1,15 +1,22 @@
 #include "Graph.h"
 
-namespace Graph {
-    void dfs(Node& node, int value) {
-        if (node.visited) return;
+int* Graph::dfs(Node& node, Node*& lastNode, bool& foundGround) {
+    static int nodeCounter{};
 
-        node.visited = true;
-        node.value = value;
+    if (node.visited) return &nodeCounter;
 
-        for (auto& edge : node.edges) {
-            if (edge.traverse)
-                dfs(*(edge.node), value);
-        }
+    node.visited = true;
+
+    if (!node.isGround)
+        node.value = nodeCounter++;
+    else
+        foundGround = true;
+
+    lastNode = &node;
+
+    for (auto& edge : node.edges) {
+         dfs(*(edge.node), lastNode,  foundGround);
     }
+    
+    return &nodeCounter;
 }
