@@ -1,8 +1,9 @@
 #include <sstream>
 #include <math.h>
 #include <optional>
+
 #include "TextHelper.h"
-#include "Output.h"
+#include "UIConstants.h"
 
 std::string toString(float value) {
     std::stringstream ss;

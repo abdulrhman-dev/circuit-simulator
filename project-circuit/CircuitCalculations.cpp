@@ -1,6 +1,8 @@
 #include "CircuitCalculations.h"
 #include "Circuit.h"
-#include "Output.h"
+#include "UIConstants.h"
+#include "NodeObject.h"
+#include "CircuitElement.h"
 #include "Graph.h"
 #include <memory>
 #include <iostream>
@@ -144,5 +146,5 @@ bool SolveCircuit(std::list<NodeObject>& nodes, std::list<CircuitElement>& circu
     if (!groundExists)
         (*std::prev(nodes.end())).isGround = false;
 
-    return true;
+    return solution.size() >= 1;
 }

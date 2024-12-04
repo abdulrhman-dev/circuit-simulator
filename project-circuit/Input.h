@@ -1,6 +1,6 @@
-#ifndef INPUT_H
-#define INPUT_H
-#include "Output.h"
+#pragma once
+#include "CircuitElement.h"
+#include "NodeObject.h"
 #include "raylib.h"
 #include "string"
 #include "UIConstants.h"
@@ -40,4 +40,3 @@ public:
 	void handleCycle();
 };
 
-#endif

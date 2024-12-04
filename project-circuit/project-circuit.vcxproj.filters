@@ -47,10 +47,10 @@
     <ClCompile Include="CircuitCalculations.cpp">
       <Filter>GUI\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Events.cpp">
+    <ClCompile Include="Collision.cpp">
       <Filter>GUI\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Events.h">
+    <ClCompile Include="Collision.h">
       <Filter>GUI\Header Files</Filter>
     </ClCompile>
     <ClCompile Include="TextHelper.cpp">
@@ -60,6 +60,12 @@
       <Filter>GUI\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StateHelper.cpp">
+      <Filter>GUI\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.h">
+      <Filter>GUI\Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
       <Filter>GUI\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -76,7 +82,7 @@
     <ClInclude Include="Circuit.h">
       <Filter>Solver\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Output.h">
+    <ClInclude Include="StatusText.h">
       <Filter>GUI\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UIConstants.h">
@@ -92,6 +98,15 @@
       <Filter>GUI\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StateHelper.h">
+      <Filter>GUI\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeObject.h">
+      <Filter>GUI\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CircuitElement.h">
+      <Filter>GUI\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CurrentCircuitElement.h">
       <Filter>GUI\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

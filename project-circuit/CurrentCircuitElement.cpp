@@ -1,4 +1,5 @@
-#include "Output.h"
+#include "CurrentCircuitElement.h"
+#include "raymath.h"
 
 void CurrentCircuitElement::update(DrawState currState, std::list<NodeObject>& nodes) {
     if (!drawingElement || !startNode)

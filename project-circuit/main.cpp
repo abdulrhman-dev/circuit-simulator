@@ -9,16 +9,20 @@
 
 #include "Circuit.h"
 #include "Graph.h"
-#include "Output.h"
-#include "Events.h"
+#include "CircuitElement.h"
+#include "CurrentCircuitElement.h"
+#include "StatusText.h"
+#include "NodeObject.h"
+#include "Collision.h"
 #include "Input.h"
 #include "CircuitCalculations.h"
 #include "StateHelper.h"
-
+#include "Keyboard.h"
 
 int main(void)
 {
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT);
+    //SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 
     InitWindow(UI::width, UI::height, "Circuit Solver");
 
@@ -48,32 +52,24 @@ int main(void)
     StatusText statusText(font);
     Input input(font, circuitElements);
 
-    Events events(currentElement,currentDrawState, statusText, input);
-
-    bool solved = false;
-    int ground = 0;
+    Collision collision(currentElement,currentDrawState, statusText, input);
 
     Vector2 hoverdCircle{ -1, -1 };
 
     while (!WindowShouldClose())     {
         hoverdCircle = { -1, -1 };
         statusText.reset();
-        events.reset();
+        collision.reset();
         
         if (!input.isInputMode()) {
-            if (IsKeyPressed(KEY_R)) currentDrawState = DrawState::RESISTOR;
-            else if (IsKeyPressed(KEY_V)) currentDrawState = DrawState::VOLTAGE_SOURCE;
-            else if (IsKeyPressed(KEY_C)) currentDrawState = DrawState::CURRENT_SOURCE;
-            else if (IsKeyPressed(KEY_W)) currentDrawState = DrawState::WIRE;
-            else if (IsKeyPressed(KEY_G)) currentDrawState = DrawState::GROUND;
-            else if (IsKeyPressed(KEY_TAB) && circuitElements.size() >= 1) input.assign(circuitElements.begin());
-            else if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_ENTER)) solved = SolveCircuit(nodes, circuitElements);
-            else if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_Z) && !currentElement.isDrawing() && !input.isInputMode() && circuitElements.size() > 0)
-                deleteElement(std::prev(circuitElements.end()), circuitElements, nodes);
-           
-            events.checkNodes(nodes);
-            events.checkCircuitElements(circuitElements, nodes);
-            events.checkGridNodes(nodes, hoverdCircle);
+            Keyboard::handleModeSwitch(currentDrawState);
+            Keyboard::handleBeginInsertMode(circuitElements, input);
+            Keyboard::handleUndo(circuitElements, nodes, input, currentElement.isDrawing());
+            Keyboard::handleSolve(circuitElements, nodes, statusText);
+
+            collision.checkNodes(nodes);
+            collision.checkCircuitElements(circuitElements, nodes);
+            collision.checkGridNodes(nodes, hoverdCircle);
 
             currentElement.update(currentDrawState, nodes);
         }
@@ -116,8 +112,6 @@ int main(void)
 // multiple circuits one canvas
 // camera that allows  to zoom in and out
 // add a direction indecator for resistors and voltage sources indicating which direction the current is flowing
-// multiple grounds
-// add CircuitElement in a more effecient way
 // add a way to export the solution as an excel file
 // add a way to label nodes
 // hide text mode

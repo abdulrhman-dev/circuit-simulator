@@ -1,5 +1,5 @@
-#pragma once
-#include "Output.h"
+#include "NodeObject.h"
+#include "CircuitElement.h"
 using CircuitElementIterator = std::list<CircuitElement>::iterator;
 
 void deleteNode(std::list<NodeObject>& nodes, int nodeGraphID);

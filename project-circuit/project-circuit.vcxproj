@@ -143,11 +143,13 @@
     <ClCompile Include="CircuitCalculations.cpp" />
     <ClCompile Include="CircuitCalculations.h" />
     <ClCompile Include="CircuitStamp.cpp" />
-    <ClCompile Include="Events.cpp" />
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CurrentCircuitElement.cpp" />
-    <ClCompile Include="Events.h" />
+    <ClCompile Include="Collision.h" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="Keyboard.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="CircuitElement.cpp" />
     <ClCompile Include="StateHelper.cpp" />
@@ -155,10 +157,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Circuit.h" />
+    <ClInclude Include="CircuitElement.h" />
     <ClInclude Include="CircuitStamp.h" />
+    <ClInclude Include="CurrentCircuitElement.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="Input.h" />
-    <ClInclude Include="Output.h" />
+    <ClInclude Include="NodeObject.h" />
+    <ClInclude Include="StatusText.h" />
     <ClInclude Include="MatrixSolve.h" />
     <ClInclude Include="AugmentedMatrix.h" />
     <ClInclude Include="StateHelper.h" />

@@ -1,10 +1,10 @@
-#ifndef EVENTS_H
-#define EVENTS_H
-#include "Output.h"
+#pragma once
+#include "CurrentCircuitElement.h"
+#include "StatusText.h"
 #include "TextHelper.h"
 #include "Input.h"
 
-class Events {
+class Collision {
 private:
     bool m_hoverTriggerd{ false };
     CurrentCircuitElement& m_currentElement;
@@ -13,7 +13,7 @@ private:
     Input& m_input;
 
 public:
-    Events(CurrentCircuitElement& currentElement, DrawState& currentDrawState, StatusText& statusText, Input& input)
+    Collision(CurrentCircuitElement& currentElement, DrawState& currentDrawState, StatusText& statusText, Input& input)
         : m_currentElement(currentElement)
         , m_currentDrawState(currentDrawState)
         , m_statusText(statusText)
@@ -28,4 +28,3 @@ public:
     void reset() { m_hoverTriggerd = false; }
 
 };
-#endif // !EVENTS_H

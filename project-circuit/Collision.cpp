@@ -1,9 +1,9 @@
-#include "Events.h"
+#include "Collision.h"
 #include "CircuitCalculations.h"
 #include "StateHelper.h"
 #include "raylib.h"
 
-void Events::checkNodes(std::list<NodeObject>& nodes) {
+void Collision::checkNodes(std::list<NodeObject>& nodes) {
     if (m_hoverTriggerd)
         return;
 
@@ -29,7 +29,7 @@ void Events::checkNodes(std::list<NodeObject>& nodes) {
 
 }
 
-void Events::checkCircuitElements(std::list<CircuitElement>& circuitElements, std::list<NodeObject>& nodes) {
+void Collision::checkCircuitElements(std::list<CircuitElement>& circuitElements, std::list<NodeObject>& nodes) {
     if (m_hoverTriggerd)
         return;
 
@@ -64,7 +64,7 @@ void Events::checkCircuitElements(std::list<CircuitElement>& circuitElements, st
 }
 
 
-void Events::checkGridNodes(std::list<NodeObject>& nodes, Vector2& hoverdCircle) {
+void Collision::checkGridNodes(std::list<NodeObject>& nodes, Vector2& hoverdCircle) {
     if (m_hoverTriggerd)
         return; 
 

@@ -1,5 +1,6 @@
-#include "Output.h"
+#include "CircuitElement.h"
 #include "TextHelper.h"
+#include "raymath.h"
 
 void CircuitElement::draw(Font font, TexturesArray& textures) {
     if (state == DrawState::WIRE) {
