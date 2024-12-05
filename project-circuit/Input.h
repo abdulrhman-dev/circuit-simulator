@@ -19,6 +19,7 @@ private:
 	std::string value{};
 	bool inputMode{ false };
 	bool periodExists{ false };
+	bool firstTime{ true };
 	std::optional<MetricPrefix> prefix;
 	Font m_font;
 public:
@@ -37,6 +38,10 @@ public:
 
 	void draw();
 
+	void handleBackSpace();
+
 	void handleCycle();
+
+
 };
 

@@ -1,6 +1,5 @@
 #include <sstream>
 #include <math.h>
-#include <optional>
 
 #include "TextHelper.h"
 #include "UIConstants.h"
@@ -34,7 +33,7 @@ std::optional<std::pair<char, float>> getPrefix(float value) {
     return {};
 }
 
-std::string getDisplayText(float value, DrawState state) {
+std::string getDisplayText(float value, std::optional<DrawState> state) {
     std::string text;
     auto chosenPrefix{getPrefix(value)};
 
@@ -46,7 +45,9 @@ std::string getDisplayText(float value, DrawState state) {
             text += chosenPrefix.value().first;
     }
     text.insert(0, toString(std::round((value * 100.0f)) / 100.0f));
-    text += getUnit(state);
+
+    if(state.has_value())
+        text += getUnit(state.value());
 
     return text;
 }

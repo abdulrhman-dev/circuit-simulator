@@ -3,6 +3,7 @@
 #include <map>
 #include <utility>
 #include <sstream>
+#include <optional>
 #include "UIConstants.h"
 
 using MetricPrefix = std::pair<char, float>;
@@ -10,7 +11,6 @@ using MetricPrefix = std::pair<char, float>;
 inline std::map<char, float> metricPrefixes{
 	{'k', 1e3f},
 	{'m', 1e-3f},
-	{'T', 1e12f},
 	{'G', 1e9f}, 
 	{'M', 1e6f}, 
 	{'u', 1e-6f},
@@ -20,7 +20,7 @@ inline std::map<char, float> metricPrefixes{
 
 std::string toString(float value);
 std::string getUnit(DrawState drawState);
-std::string getDisplayText(float value, DrawState state);
+std::string getDisplayText(float value, std::optional<DrawState> state = std::nullopt);
 
 #endif
 

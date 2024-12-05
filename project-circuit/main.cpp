@@ -121,8 +121,6 @@ int main(void)
 }
 
 // TODO
-// camera that allows  to zoom in and out
-// add a direction indecator for resistors and voltage sources indicating which direction the current is flowing
 // add a way to export the solution as an excel file
 // add a way to label nodes
 // hide text mode

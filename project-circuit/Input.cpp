@@ -4,6 +4,7 @@ void Input::assign(CircuitElementIterator circuitElement) {
 	if (circuitElement != m_circuitElements.end()) {
 		inputElementIterator = circuitElement;
 		inputMode = true;
+		firstTime = true;
 		inputCircuitElement = &(*circuitElement);
 	}
 }
@@ -13,6 +14,7 @@ void Input::reset() {
 	inputCircuitElement = nullptr;
 	inputMode = false;
 	periodExists = false;
+	firstTime = true;
 	prefix = std::nullopt;
 }
 
@@ -34,38 +36,61 @@ void Input::handle() {
 		if (prefix == std::nullopt && (isNumber || canInsertPeriod || isPrefix))
 		{
 			value += static_cast<char>(key);
+			firstTime = false;
+
 		}
 
 		if (canInsertPeriod)
+		{
 			periodExists = true;
+			firstTime = false;
+		}
 
 		if (isPrefix) 
-			prefix = MetricPrefix{ key , metricPrefixes[key]};
+		{
+			prefix = MetricPrefix{ key , metricPrefixes[key] };
+			firstTime = false;
+		}
 
 		
-
 		key = GetCharPressed();
 	}
 
-	if (IsKeyPressed(KEY_BACKSPACE) && value.size() > 0)
+	handleBackSpace();
+	
+	if (inputCircuitElement && !firstTime) {
+		if (value != "") {
+			inputCircuitElement->value = std::stof(value);
+			if (prefix) inputCircuitElement->value *= prefix.value().second;
+		}
+		else {
+			inputCircuitElement->value = 0.0f;
+		}
+	}
+	
+	handleCycle();
+
+	if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER))
+		reset();
+}
+
+void Input::handleBackSpace() {
+	if (!firstTime && value.size() < 1)
+		return;
+
+
+	if (IsKeyPressed(KEY_BACKSPACE))
 	{
+		if (firstTime) {
+			value = getDisplayText(inputCircuitElement->value);
+			firstTime = false;
+		}
+
 		if (value.back() == '.') periodExists = false;
 		if (prefix != std::nullopt) prefix = std::nullopt;
 		value.pop_back();
 	}
 
-	if (inputCircuitElement) {
-		if (value != "") {
-			inputCircuitElement->value = std::stof(value);
-			if (prefix) inputCircuitElement->value *= prefix.value().second;
-		} else if (value == "")
-			inputCircuitElement->value = 0.0f;
-	}
-
-	handleCycle();
-
-	if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER))
-		reset();
 }
 
 void Input::handleCycle() {
@@ -122,12 +147,17 @@ void Input::draw() {
 
 	std::string text;
 
-	if (value != "")
-		text = value;
-	else
-		text = toString(inputCircuitElement->value);
+	if(firstTime && value == "")
+		text = getDisplayText(inputCircuitElement->value);
+	else {
+		if (value != "")
+			text = value;
+		else 
+			text = toString(0);
+	}
 
 	text += getUnit(inputCircuitElement->state);
+
 
 	DrawTextEx(m_font, text.c_str(), Vector2{ UI::cellSize,  GetScreenHeight() - UI::cellSize - 10 }, 20, 1, BLACK);
 }
