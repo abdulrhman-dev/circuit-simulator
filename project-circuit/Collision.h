@@ -9,20 +9,18 @@ private:
     bool m_hoverTriggerd{ false };
     CurrentCircuitElement& m_currentElement;
     DrawState& m_currentDrawState;
-    StatusText& m_statusText;
-    Input& m_input;
+    Camera2D& m_camera;
 
 public:
-    Collision(CurrentCircuitElement& currentElement, DrawState& currentDrawState, StatusText& statusText, Input& input)
+    Collision(CurrentCircuitElement& currentElement, DrawState& currentDrawState, Camera2D& camera)
         : m_currentElement(currentElement)
         , m_currentDrawState(currentDrawState)
-        , m_statusText(statusText)
         , m_hoverTriggerd(false)
-        , m_input(input)
+        , m_camera(camera)
     {}
 
-    void checkNodes(std::list<NodeObject>& nodes);
-    void checkCircuitElements(std::list<CircuitElement>& circuitElements, std::list<NodeObject>& nodes);
+    void checkNodes(std::list<NodeObject>& nodes, StatusText& statusText);
+    void checkCircuitElements(std::list<CircuitElement>& circuitElements, std::list<NodeObject>& nodes, Input& input, StatusText& statusText);
     void checkGridNodes(std::list<NodeObject>& nodes, Vector2& hoverdCircle);
 
     void reset() { m_hoverTriggerd = false; }

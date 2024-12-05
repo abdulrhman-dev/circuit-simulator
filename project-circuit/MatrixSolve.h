@@ -3,11 +3,13 @@
 #include "AugmentedMatrix.h"
 #include "vector"
 #include "iostream"
+#include <cmath>
 
 namespace MatrixSolver {
     template <typename T>
     bool isZeroColumn(int startingRow, int column, const AugmentedMatrix<T>& m, int& firstNonZero) {
         for (int row = startingRow; row < m.rows(); ++row) {
+            // may cause problems
             if (m.get(row, column) != 0)
             {
                 firstNonZero = row;
@@ -19,7 +21,7 @@ namespace MatrixSolver {
     }
 
     template<typename T>
-    std::vector<double> extractSolution(AugmentedMatrix<T>& m) {
+    std::vector<T> extractSolution(AugmentedMatrix<T>& m) {
         std::vector<T> solution;
         solution.reserve(static_cast<std::size_t>(m.rows()));
 
@@ -44,6 +46,17 @@ namespace MatrixSolver {
     }
 
     template <typename T>
+    void print(const AugmentedMatrix<T>& m) {
+        for (int i = 0; i < m.rows(); ++i) {
+
+            for (int j = 0; j < m.columns(); ++j) {
+                std::cout << std::setw(7) << m.get(i, j) << " ";
+            }
+
+            std::cout << '\n';
+        }
+    }
+    template <typename T>
     std::vector<T> solve(AugmentedMatrix<T>& m) {
         for (int row = 0; row < m.rows(); ++row) {
             for (int column = row; column < m.columns() - 1; ++column) {
@@ -58,8 +71,10 @@ namespace MatrixSolver {
 
                 if (leadingElement != 1) {
                     m.applyRow(row, [leadingElement](T& value) -> void {
+                        if (value == 0) return;
+
                         value /= leadingElement;
-                        });
+                   });
                 }
 
                 for (int workingRow = 0; workingRow < m.rows(); ++workingRow) {
@@ -79,16 +94,6 @@ namespace MatrixSolver {
         return extractSolution(m);
     }
 
-    template <typename T>
-    void print(const AugmentedMatrix<T>& m) {
-        for (int i = 0; i < m.rows(); ++i) {
-
-            for (int j = 0; j < m.columns(); ++j) {
-                std::cout << std::setw(5) << m.get(i, j) << " ";
-            }
-
-            std::cout << '\n';
-        }
-    }
+  
 }
 #endif // ! MATRIX_SOLVE_H

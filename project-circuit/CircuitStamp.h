@@ -1,7 +1,7 @@
 #ifndef CIRCUIT_STAMP_H
 #define CIRCUIT_STAMP_H
 #include "AugmentedMatrix.h"
-using Number = double;
+using Number = long double;
 
 struct CircuitNode {
     int index{};

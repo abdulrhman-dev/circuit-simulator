@@ -1,7 +1,7 @@
 #include "CurrentCircuitElement.h"
 #include "raymath.h"
 
-void CurrentCircuitElement::update(DrawState currState, std::list<NodeObject>& nodes) {
+void CurrentCircuitElement::update(Camera2D& camera, DrawState currState, std::list<NodeObject>& nodes) {
     if (!drawingElement || !startNode)
         return;
 
@@ -18,7 +18,9 @@ void CurrentCircuitElement::update(DrawState currState, std::list<NodeObject>& n
 
     state = currState;
 
-    reCalculateRenderInfo(GetMousePosition());
+    Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), camera);
+
+    reCalculateRenderInfo(mousePos);
 }
 
 void CurrentCircuitElement::reCalculateRenderInfo(Vector2 endPos) {
@@ -103,14 +105,16 @@ void CurrentCircuitElement::reset() {
     drawingElement = false;
 }
 
-void CurrentCircuitElement::draw(Font font, TexturesArray& textures) {
+void CurrentCircuitElement::draw(Camera2D& camera, Font font, TexturesArray& textures) {
     if (!drawingElement || !startNode)
         return;
 
+    Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), camera);
+
     if (state == DrawState::WIRE) {
-        DrawLineEx(startNode->pos, GetMousePosition(), 2.0f, UI::WIRE_COLOR);
+        DrawLineEx(startNode->pos, mousePos, 2.0f, UI::WIRE_COLOR);
         return;
     }
 
-    drawElement(GetMousePosition(), font, textures);
+    drawElement(mousePos, font, textures);
 }

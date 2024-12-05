@@ -3,17 +3,21 @@
 #include "StateHelper.h"
 #include "raylib.h"
 
-void Collision::checkNodes(std::list<NodeObject>& nodes) {
+void Collision::checkNodes(std::list<NodeObject>& nodes, StatusText& statusText) {
     if (m_hoverTriggerd)
         return;
 
+    Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), m_camera);
+
     for (auto& node : nodes) {
-        if (CheckCollisionPointCircle(GetMousePosition(), node.pos, UI::cellSize / 3.0f)) {
+        if (CheckCollisionPointCircle(mousePos, node.pos, UI::cellSize / 3.0f)) {
             m_hoverTriggerd = true;
 
             if (node.solved) {
-                m_statusText.clearText();
-                m_statusText.addText("V = " + getDisplayText(node.value, DrawState::VOLTAGE_SOURCE));
+                statusText.clearText();
+                statusText.addText("V = " + getDisplayText(node.value, DrawState::VOLTAGE_SOURCE));
+                statusText.addText(", N = " + toString(node.graphNode.value));
+
             }
 
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && m_currentDrawState == DrawState::GROUND && m_currentElement.startNode) {
@@ -25,17 +29,17 @@ void Collision::checkNodes(std::list<NodeObject>& nodes) {
             break;
         }
     }
-
-
 }
 
-void Collision::checkCircuitElements(std::list<CircuitElement>& circuitElements, std::list<NodeObject>& nodes) {
+void Collision::checkCircuitElements(std::list<CircuitElement>& circuitElements, std::list<NodeObject>& nodes, Input& input, StatusText& statusText) {
     if (m_hoverTriggerd)
         return;
 
+    Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), m_camera);
+
     for (auto it = circuitElements.begin(); it != circuitElements.end(); it++) {
         auto& circuitElement = *it;
-        if (CheckCollisionPointLine(GetMousePosition(), circuitElement.startNode->pos, circuitElement.endNode->pos, UI::circuitElementHeight)) {
+        if (CheckCollisionPointLine(mousePos, circuitElement.startNode->pos, circuitElement.endNode->pos, UI::circuitElementHeight)) {
             m_hoverTriggerd = true;
             circuitElement.setOpacity(0.6f);
 
@@ -47,14 +51,14 @@ void Collision::checkCircuitElements(std::list<CircuitElement>& circuitElements,
             const bool invalidDrawStates = circuitElement.state != DrawState::WIRE && circuitElement.state != DrawState::GROUND;
 
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && invalidDrawStates && !m_currentElement.isDrawing()) {
-                m_input.assign(it);
+                input.assign(it);
                 break;
             }
 
             if (circuitElement.startNode->solved && circuitElement.endNode->solved) {
-                m_statusText.clearText();
-                m_statusText.addText("\xCE\x94V=" + getDisplayText(calculateVoltageDiff(circuitElement), DrawState::VOLTAGE_SOURCE));
-                m_statusText.addText(", I= " + getDisplayText(circuitElement.current, DrawState::CURRENT_SOURCE));
+                statusText.clearText();
+                statusText.addText("\xCE\x94V=" + getDisplayText(calculateVoltageDiff(circuitElement), DrawState::VOLTAGE_SOURCE));
+                statusText.addText(", I= " + getDisplayText(circuitElement.current, DrawState::CURRENT_SOURCE));
             }
 
 
@@ -68,10 +72,12 @@ void Collision::checkGridNodes(std::list<NodeObject>& nodes, Vector2& hoverdCirc
     if (m_hoverTriggerd)
         return; 
 
-    for (int i = 1; i <= UI::lineNum; ++i) {
-        for (int j = 1; j <= UI::lineNum; ++j) {
+    Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), m_camera);
+
+    for (int i = 0; i <= UI::slices; ++i) {
+        for (int j = 0; j <= UI::slices * 0.5; ++j) {
             Vector2 checkCircleCenter = Vector2{ UI::cellSize * i, UI::cellSize * j };
-            if (CheckCollisionPointCircle(GetMousePosition(), checkCircleCenter, UI::cellSize / 3.0f)) {
+            if (CheckCollisionPointCircle(mousePos, checkCircleCenter, UI::cellSize / 3.0f)) {
                 if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                     if (m_currentDrawState == DrawState::GROUND && m_currentElement.startNode) {
                         m_currentElement.addNode(checkCircleCenter, m_currentDrawState);

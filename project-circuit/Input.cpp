@@ -117,7 +117,7 @@ void Input::handleCycle() {
 void Input::draw() {
 	if (!inputMode || !inputCircuitElement)
 		return;
-	Rectangle rec{ UI::cellSize - 10.0f,UI::height - UI::cellSize - 20, UI::width - 2 * (UI::cellSize - 10), 40 };
+	Rectangle rec{ UI::cellSize - 10.0f,GetScreenHeight() - UI::cellSize - 20, GetScreenWidth() - 2 * (UI::cellSize - 10), 40};
 	DrawRectangleLinesEx(rec, 2.0f, UI::WIRE_COLOR);
 
 	std::string text;
@@ -129,7 +129,7 @@ void Input::draw() {
 
 	text += getUnit(inputCircuitElement->state);
 
-	DrawTextEx(m_font, text.c_str(), Vector2{ UI::cellSize,  UI::height - UI::cellSize - 10 }, 20, 1, BLACK);
+	DrawTextEx(m_font, text.c_str(), Vector2{ UI::cellSize,  GetScreenHeight() - UI::cellSize - 10 }, 20, 1, BLACK);
 }
 
 

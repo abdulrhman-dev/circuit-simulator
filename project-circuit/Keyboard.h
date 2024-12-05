@@ -8,6 +8,8 @@
 #include "StatusText.h"
 
 namespace Keyboard {
+	void handleCameraActions(Camera2D& camera);
+
 	void handleModeSwitch(DrawState& currentDrawState);
 
 	void handleUndo(std::list<CircuitElement>& circuitElements, std::list<NodeObject>& nodes, Input& input, bool isCurrentElementDrawing);

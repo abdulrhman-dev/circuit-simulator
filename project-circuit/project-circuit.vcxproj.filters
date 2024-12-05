@@ -32,9 +32,6 @@
     <ClCompile Include="CircuitElement.cpp">
       <Filter>GUI\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
     <ClCompile Include="CurrentCircuitElement.cpp">
       <Filter>GUI\Source Files</Filter>
     </ClCompile>
@@ -67,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="Graph.cpp">
       <Filter>GUI\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -13,8 +13,8 @@ public:
     int isDrawing() const { return drawingElement; }
     void addNode(NodeObject& node, DrawState currDrawState);
     void addNode(Vector2 pos, DrawState currDrawState);
-    void update(DrawState currState, std::list<NodeObject>& nodes);
+    void update(Camera2D& camera, DrawState currState, std::list<NodeObject>& nodes);
     void reCalculateRenderInfo(Vector2 endPos);
-    void draw(Font font, TexturesArray& textures);
+    void draw(Camera2D& camera, Font font, TexturesArray& textures);
     void reset();
 };

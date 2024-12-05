@@ -6,6 +6,7 @@
 
 #include "raylib.h"
 #include "raymath.h"
+#include "rlgl.h"
 
 #include "Circuit.h"
 #include "Graph.h"
@@ -25,7 +26,7 @@
 int main(void)
 {
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT);
-    //SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 
     InitWindow(UI::width, UI::height, "Circuit Solver");
 
@@ -50,12 +51,15 @@ int main(void)
     std::list<NodeObject> nodes{};
     std::list<CircuitElement> circuitElements{};
 
+    Camera2D camera = { 0 };
+    camera.zoom = 1.0f;
+
     CurrentCircuitElement currentElement{ circuitElements };
     DrawState currentDrawState{ DrawState::RESISTOR };
     StatusText statusText(font);
     Input input(font, circuitElements);
 
-    Collision collision(currentElement, currentDrawState, statusText, input);
+    Collision collision(currentElement, currentDrawState, camera);
 
     Vector2 hoverdCircle{ -1, -1 };
 
@@ -65,16 +69,17 @@ int main(void)
         collision.reset();
         
         if (!input.isInputMode()) {
+            Keyboard::handleCameraActions(camera);
             Keyboard::handleModeSwitch(currentDrawState);
             Keyboard::handleBeginInsertMode(circuitElements, input);
             Keyboard::handleUndo(circuitElements, nodes, input, currentElement.isDrawing());
             Keyboard::handleSolve(circuitElements, nodes, statusText);
 
-            collision.checkNodes(nodes);
-            collision.checkCircuitElements(circuitElements, nodes);
+            collision.checkNodes(nodes, statusText);
+            collision.checkCircuitElements(circuitElements, nodes, input, statusText);
             collision.checkGridNodes(nodes, hoverdCircle);
 
-            currentElement.update(currentDrawState, nodes);
+            currentElement.update(camera, currentDrawState, nodes);
         }
         else
             input.handle();
@@ -82,13 +87,15 @@ int main(void)
         BeginDrawing();
         ClearBackground(WHITE);
 
-        for (int i = 1; i <= UI::lineNum; ++i) 
-            DrawLineEx(Vector2{ 0,UI::cellSize * i }, Vector2{ UI::width, UI::cellSize * i }, 1.0, UI::GRID_COLOR);
+        BeginMode2D(camera);
 
-        for (int i = 1; i <= UI::lineNum; ++i)
-            DrawLineEx(Vector2{ UI::cellSize * i, 0 }, Vector2{ UI::cellSize * i, UI::height }, 1.0, UI::GRID_COLOR);
-        
-        currentElement.draw(font, textures);
+        rlPushMatrix();
+            rlTranslatef(0.5 * UI::slices * UI::cellSize, 0.5 * UI::slices * UI::cellSize, 0);
+            rlRotatef(90, 1, 0, 0);
+            DrawGrid(UI::slices, UI::cellSize);
+        rlPopMatrix();
+
+        currentElement.draw(camera, font, textures);
 
         for (auto& circuitElement : circuitElements)
             circuitElement.draw(font, textures);
@@ -98,6 +105,8 @@ int main(void)
   
         for (const auto& node : nodes)
             node.draw();
+
+        EndMode2D();
 
         statusText.draw();
         input.draw();
@@ -112,7 +121,6 @@ int main(void)
 }
 
 // TODO
-// multiple circuits one canvas
 // camera that allows  to zoom in and out
 // add a direction indecator for resistors and voltage sources indicating which direction the current is flowing
 // add a way to export the solution as an excel file
