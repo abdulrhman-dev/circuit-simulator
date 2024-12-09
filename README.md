@@ -21,7 +21,7 @@ Circuit Simulator
 
 - ✅ **Interactive Circuit Design:** Create circuit elements like resistors, voltage sources, current sources, wires, and ground on a user-friendly grid interface.
 
-- ✅ **Efficient Value Input Navigation:** Update circuit element values directly with support for metric prefixes (e.g., k, M, µ) for precision.
+- ✅ **Efficient Value Input:** Update circuit element values directly with support for metric prefixes (e.g., k, M, µ) for precision.
 
 - ✅ **Seamless Input Navigation:** Quickly switch between circuit elements to modify values.
 
@@ -37,7 +37,7 @@ Circuit Simulator
 
 ## User Guide
 
-## 1. Creating a Circuit Element  
+### 1. Creating a Circuit Element  
 - **Start Drawing**: Click on any grid intersection to begin creating a circuit element. The element will extend from the clicked intersection to the mouse cursor position.  
 - **Cancel Creation**: Right-click or press `Ctrl + Z` to cancel the creation.  
 - **Complete Element**: Click on another grid intersection to finalize the circuit element.  
@@ -50,7 +50,7 @@ Circuit Simulator
 
 ---
 
-## 2. Modifying Circuit Element Values  
+### 2. Modifying Circuit Element Values  
 - **Single Element Input**:
   - Left-click on the element to enter input mode.  
   - Type the desired value and press `Enter` (metrix prefixes can be added at the end).
@@ -73,7 +73,7 @@ Circuit Simulator
 
 ---
 
-## 3. Solving the Circuit  
+### 3. Solving the Circuit  
 - **Solve Command**: Press `Ctrl + Enter` to solve the circuit (multiple circuits can be solved in one canvas).  
 - **View Results**:
   - Hover over nodes to see nodal voltages.  
@@ -82,7 +82,7 @@ Circuit Simulator
 
 ---
 
-## 4. Extra Features  
+### 4. Extra Features  
 - **Camera Controls**:
   - Move the view: Hold `Right Click` and drag the mouse.  
   - Zoom in/out: Use the mouse wheel or press `Ctrl + =` / `Ctrl + -`.  
@@ -90,7 +90,7 @@ Circuit Simulator
 
 ---
 
-## 5. Shortcuts Summary  
+### 5. Shortcuts Summary  
 
 | **Action**                   | **Shortcut**           |  
 |-------------------------------|------------------------|  
