@@ -57,6 +57,7 @@ public:
         for (int column = 0; column < m_columns; ++column) {
            
             data[targetRow][column] += multiple * data[sourceRow][column];
+
             if (std::abs(data[targetRow][column]) < 1e-14) {
                 data[targetRow][column] = 0;
             }

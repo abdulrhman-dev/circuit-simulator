@@ -1,9 +1,11 @@
 #include "Graph.h"
 
-int* Graph::dfs(Node& node, Node*& lastNode, bool& foundGround) {
+int *Graph::dfs(Node &node, Node *&lastNode, bool &foundGround)
+{
     static int nodeCounter{};
 
-    if (node.visited) return &nodeCounter;
+    if (node.visited)
+        return &nodeCounter;
 
     node.visited = true;
 
@@ -14,9 +16,10 @@ int* Graph::dfs(Node& node, Node*& lastNode, bool& foundGround) {
 
     lastNode = &node;
 
-    for (auto& edge : node.edges) {
-         dfs(*(edge.node), lastNode,  foundGround);
+    for (auto &edge : node.edges)
+    {
+        dfs(*(edge.node), lastNode, foundGround);
     }
-    
+
     return &nodeCounter;
 }

@@ -10,7 +10,7 @@ void deleteNode(std::list<NodeObject>& nodes, int nodeGraphID) {
         nodes.erase(deleteElement);
 }
 
-void deleteEdge(std::vector<Graph::Edge>& edges, int nodeGraphID) {
+void deleteEdge(std::list<Graph::Edge>& edges, int nodeGraphID) {
     auto deleteElement = std::find_if(edges.begin(), edges.end(), [nodeGraphID](const Graph::Edge& edge) {
         return edge.node->id == nodeGraphID;
         });

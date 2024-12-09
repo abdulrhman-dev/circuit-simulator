@@ -1,3 +1,4 @@
+#pragma once
 #include "CircuitElement.h"
 #include "NodeObject.h"
 #include <list>

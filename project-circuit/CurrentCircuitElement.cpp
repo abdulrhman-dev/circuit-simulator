@@ -1,5 +1,6 @@
 #include "CurrentCircuitElement.h"
 #include "raymath.h"
+#include "iostream"
 
 void CurrentCircuitElement::update(Camera2D& camera, DrawState currState, std::list<NodeObject>& nodes) {
     if (!drawingElement || !startNode)
@@ -36,7 +37,7 @@ void CurrentCircuitElement::reCalculateRenderInfo(Vector2 endPos) {
         RenderInfo.lineLength = (RenderInfo.ElementLength - RenderInfo.destTextureRec.width);
 
 
-    RenderInfo.rotation = 180.0f - (Vector2Angle(Vector2Subtract(Vector2{ startNode->pos.x, startNode->pos.y }, endPos), Vector2{ 1,0 }) * 180.0f / PI);
+    RenderInfo.rotation = -(Vector2Angle(RenderInfo.ElementVector, Vector2{ 1,0 }) * RAD2DEG);
 
     if (RenderInfo.ElementLength > UI::cellSize) {
         RenderInfo.destTextureRec.width = UI::cellSize;
@@ -113,6 +114,11 @@ void CurrentCircuitElement::draw(Camera2D& camera, Font font, TexturesArray& tex
 
     if (state == DrawState::WIRE) {
         DrawLineEx(startNode->pos, mousePos, 2.0f, UI::WIRE_COLOR);
+        return;
+    }
+
+    if(state == DrawState::GROUND) {
+        drawGround(mousePos, font, textures);
         return;
     }
 

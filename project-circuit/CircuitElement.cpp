@@ -9,7 +9,7 @@ void CircuitElement::draw(Font font, TexturesArray& textures) {
         return;
     }
     else if (state == DrawState::GROUND) {
-        drawElement({0, 0}, font, textures);
+        drawGround({0, 0}, font, textures);
         RenderInfo.opacity = 1.0f;
         return;
     }
@@ -21,18 +21,17 @@ void CircuitElement::draw(Font font, TexturesArray& textures) {
 void CircuitElement::drawElement(Vector2 endPos, Font font, TexturesArray& textures) {
     Texture2D currentTexture = textures[static_cast<std::size_t>(state)];
     Rectangle sourceTexture = { 0.0f, 0.0f, (float)currentTexture.width, (float)currentTexture.height };
-
       
-    if(state != DrawState::GROUND)
-        drawElementText(font, endPos);
+    drawElementText(font, endPos);
 
     DrawTexturePro(currentTexture, sourceTexture, RenderInfo.destTextureRec, RenderInfo.origin, RenderInfo.rotation, Fade(WHITE, RenderInfo.opacity));
 
     if (RenderInfo.drawExtentions) {
-        DrawLineEx({ RenderInfo.destTextureRec.x, RenderInfo.destTextureRec.y }, Vector2Add({ RenderInfo.destTextureRec.x, RenderInfo.destTextureRec.y }, Vector2Scale(Vector2Normalize(RenderInfo.ElementVector), RenderInfo.lineLength)), 2.0f, Fade(UI::WIRE_COLOR, RenderInfo.opacity));
-        
-        if(state != DrawState::GROUND)
-            DrawLineEx(Vector2Subtract(endPos, Vector2Scale(Vector2Normalize(RenderInfo.ElementVector), RenderInfo.lineLength)), endPos, 2.0f, Fade(UI::WIRE_COLOR, RenderInfo.opacity));
+        Vector2 startPos = { RenderInfo.destTextureRec.x, RenderInfo.destTextureRec.y };
+        Vector2 lineVector = Vector2Scale(Vector2Normalize(RenderInfo.ElementVector), RenderInfo.lineLength);
+
+        DrawLineEx(startPos, Vector2Add(startPos, lineVector), 2.0f, Fade(UI::WIRE_COLOR, RenderInfo.opacity));
+        DrawLineEx(Vector2Subtract(endPos, lineVector), endPos, 2.0f, Fade(UI::WIRE_COLOR, RenderInfo.opacity));
     }
 
     RenderInfo.opacity = 1.0f;
@@ -45,12 +44,10 @@ void CircuitElement::drawGround(Vector2 endPos, Font font, TexturesArray& textur
     DrawTexturePro(currentTexture, sourceTexture, RenderInfo.destTextureRec, RenderInfo.origin, RenderInfo.rotation, Fade(WHITE, RenderInfo.opacity));
 
     if (RenderInfo.drawExtentions) {
-        DrawLineEx(
-            { RenderInfo.destTextureRec.x, RenderInfo.destTextureRec.y }, 
-            Vector2Add({ RenderInfo.destTextureRec.x, RenderInfo.destTextureRec.y }, Vector2Scale(Vector2Normalize(RenderInfo.ElementVector), RenderInfo.lineLength)),
-            2.0f, 
-            Fade(UI::WIRE_COLOR, RenderInfo.opacity)
-        );
+        Vector2 startPos = { RenderInfo.destTextureRec.x, RenderInfo.destTextureRec.y };
+        Vector2 lineVector = Vector2Scale(Vector2Normalize(RenderInfo.ElementVector), RenderInfo.lineLength);
+
+        DrawLineEx(startPos, Vector2Add(startPos, lineVector), 2.0f, Fade(UI::WIRE_COLOR, RenderInfo.opacity));
     }
 
     RenderInfo.opacity = 1.0f;

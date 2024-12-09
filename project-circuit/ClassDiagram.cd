@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="CircuitElement">
+    <Position X="6" Y="3.75" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AgAQAAAAAAAABAEAAAIAAAAAkAAAACAEAQIAAAAIAAA=</HashCode>
+      <FileName>CircuitElement.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="endNode" />
+      <Field Name="RenderInfo" />
+      <Field Name="state" />
+      <Field Name="startNode" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Collision">
+    <Position X="12" Y="9.75" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAFAIAAAIAEAAAAAAAAAAAAAIAgAAAAAAAAAgA=</HashCode>
+      <FileName>Collision.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="m_currentElement" />
+      <Field Name="m_currentDrawState" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CurrentCircuitElement">
+    <Position X="5.75" Y="10.25" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAABIAEAAQAgAAAAAAAAgAEAAEAAA=</HashCode>
+      <FileName>CurrentCircuitElement.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Input">
+    <Position X="0.5" Y="5.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEIEAEAAAAAAIAIAAAEkAABiAAQAACAwgAAAA=</HashCode>
+      <FileName>Input.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="inputCircuitElement" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="StatusText">
+    <Position X="1" Y="11.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEIAAAAAICAAIAARAAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>StatusText.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="CircuitElementRenderInfo">
+    <Position X="2" Y="1" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>CEAAAAAAAAAAAAAAACCAAAAAAAAAAAACAAEAAAAAAFA=</HashCode>
+      <FileName>CircuitElement.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NodeObject">
+    <Position X="13.25" Y="1.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAYAAAAAAIAAIAQAAAACCAAEAAAAAAAAQA=</HashCode>
+      <FileName>NodeObject.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="graphNode" />
+    </ShowAsAssociation>
+  </Struct>
+  <Struct Name="Graph::Node">
+    <Position X="9.75" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAIAAAAAAAAAAAAAAAAAAACAAAAAAAAIAAgA=</HashCode>
+      <FileName>Graph.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Graph::Edge">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Graph.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="node" />
+    </ShowAsAssociation>
+  </Struct>
+  <Enum Name="DrawState">
+    <Position X="12.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAACAAAAAABAAAAABAAAAQAAAAAAA=</HashCode>
+      <FileName>UIConstants.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

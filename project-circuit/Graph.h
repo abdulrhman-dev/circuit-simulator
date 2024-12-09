@@ -12,7 +12,7 @@ namespace Graph {
 
     struct Node {
         int value{-1};
-        std::vector<Edge> edges;
+        std::list<Edge> edges;
         bool visited{};
         bool isGround{};
         int id{0};

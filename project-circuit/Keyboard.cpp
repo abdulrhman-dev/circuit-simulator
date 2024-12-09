@@ -1,7 +1,9 @@
 #include "Keyboard.h"
 #include "raymath.h"
 
-void Keyboard::handleCameraActions(Camera2D& camera) {
+void Keyboard::handleCameraActions
+
+(Camera2D& camera) {
     if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
     {
         Vector2 delta = GetMouseDelta();

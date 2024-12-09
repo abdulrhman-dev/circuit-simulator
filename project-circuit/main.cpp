@@ -35,14 +35,13 @@ int main(void)
     Font font = LoadFont("./assets/dejavu.fnt");
     SetTextureFilter(font.texture, TEXTURE_FILTER_TRILINEAR);
 
-    TexturesArray textures{ 
+    TexturesArray textures{
         LoadTexture("./assets/Resistor.png"),
         LoadTexture("./assets/Voltage Source.png"),
         LoadTexture("./assets/Current Source.png"),
-        LoadTexture("./assets/Ground.png")
-    };
+        LoadTexture("./assets/Ground.png")};
 
-    for (auto& texture : textures)
+    for (auto &texture : textures)
         SetTextureFilter(texture, TEXTURE_FILTER_POINT);
 
     // WIRE  doesn't have a texture and it, in this case, represents the count of elements
@@ -51,24 +50,28 @@ int main(void)
     std::list<NodeObject> nodes{};
     std::list<CircuitElement> circuitElements{};
 
-    Camera2D camera = { 0 };
+    Camera2D camera = {0};
     camera.zoom = 1.0f;
 
-    CurrentCircuitElement currentElement{ circuitElements };
-    DrawState currentDrawState{ DrawState::RESISTOR };
-    StatusText statusText(font);
-    Input input(font, circuitElements);
+    DrawState currentDrawState{DrawState::RESISTOR};
 
+    CurrentCircuitElement currentElement{circuitElements};
+
+    Input input(font, circuitElements);
     Collision collision(currentElement, currentDrawState, camera);
 
-    Vector2 hoverdCircle{ -1, -1 };
+    StatusText statusText(font);
 
-    while (!WindowShouldClose())     {
-        hoverdCircle = { -1, -1 };
+    Vector2 hoverdCircle{-1, -1};
+
+    while (!WindowShouldClose())
+    {
+        hoverdCircle = {-1, -1};
         statusText.reset();
         collision.reset();
-        
-        if (!input.isInputMode()) {
+
+        if (!input.isInputMode())
+        {
             Keyboard::handleCameraActions(camera);
             Keyboard::handleModeSwitch(currentDrawState);
             Keyboard::handleBeginInsertMode(circuitElements, input);
@@ -83,27 +86,27 @@ int main(void)
         }
         else
             input.handle();
-        
+
         BeginDrawing();
         ClearBackground(WHITE);
 
         BeginMode2D(camera);
 
         rlPushMatrix();
-            rlTranslatef(0.5 * UI::slices * UI::cellSize, 0.5 * UI::slices * UI::cellSize, 0);
-            rlRotatef(90, 1, 0, 0);
-            DrawGrid(UI::slices, UI::cellSize);
+        rlTranslatef(0.5 * UI::slices * UI::cellSize, 0.5 * UI::slices * UI::cellSize, 0);
+        rlRotatef(90, 1, 0, 0);
+        DrawGrid(UI::slices, UI::cellSize);
         rlPopMatrix();
 
         currentElement.draw(camera, font, textures);
 
-        for (auto& circuitElement : circuitElements)
+        for (auto &circuitElement : circuitElements)
             circuitElement.draw(font, textures);
- 
-        if (hoverdCircle.x != -1 && hoverdCircle.y != -1) 
+
+        if (hoverdCircle.x != -1 && hoverdCircle.y != -1)
             DrawCircleV(hoverdCircle, 5, UI::GRID_COLOR);
-  
-        for (const auto& node : nodes)
+
+        for (const auto &node : nodes)
             node.draw();
 
         EndMode2D();
@@ -114,7 +117,7 @@ int main(void)
         EndDrawing();
     }
 
-    for (auto& texture : textures) 
+    for (auto &texture : textures)
         UnloadTexture(texture);
 
     CloseWindow();
@@ -125,4 +128,4 @@ int main(void)
 // add a way to label nodes
 // hide text mode
 // - show the value when hovering
-// - when editing the circuit element value 
+// - when editing the circuit element value
